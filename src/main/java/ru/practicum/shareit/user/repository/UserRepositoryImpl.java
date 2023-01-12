@@ -10,9 +10,9 @@ import java.util.Optional;
 
 @Component
 public class UserRepositoryImpl implements UserRepository {
+    private static long userId;
     private Map<Long, User> users;
     private Map<String, Long> emails;
-    private static long userId;
 
     public UserRepositoryImpl() {
         users = new HashMap<>();

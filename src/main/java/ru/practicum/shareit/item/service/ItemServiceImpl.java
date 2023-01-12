@@ -28,10 +28,10 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public Item saveItem(ItemDto itemDto, long userId) {
         if (itemDto.getAvailable() == null) {
-            throw new ValidationException("Не передан статус вещи");
+            throw new ValidationException("The status of the item has not been transferred");
         }
         if (!userRepository.get(userId).isPresent()) {
-            throw new NotFoundException(String.format("Пользователь (id = %s) не найден", userId));
+            throw new NotFoundException(String.format("User (id = %s) not found", userId));
         }
         User user = userRepository.get(userId).get();
         Item item = ItemMapper.toItem(itemDto, user, null);
@@ -41,16 +41,16 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public Optional<Item> updateItem(long itemId, ItemDto itemDto, long userId) {
         if (!userRepository.get(userId).isPresent()) {
-            throw new NotFoundException(String.format("Пользователь (id = %s) не найден", userId));
+            throw new NotFoundException(String.format("User (id = %s) not found", userId));
         }
         User user = userRepository.get(userId).get();
         itemDto.setId(itemId);
         Item item = ItemMapper.toItem(itemDto, user, null);
         if (!getItem(itemId).isPresent()) {
-            throw new NotFoundException(String.format("Вещь (id = %s) не найдена", itemId));
+            throw new NotFoundException(String.format("Item (id = %s) not found", itemId));
         } else if (!getItem(itemId).get().getOwner().equals(user)) {
             throw new NotFoundException(String.format(
-                    "Вещь (id = %s) не найдена у пользователя (id = %s)", itemId, userId));
+                    "Item (id = %s) was not found on the user (id = %s)", itemId, userId));
         }
         return repository.update(item);
     }

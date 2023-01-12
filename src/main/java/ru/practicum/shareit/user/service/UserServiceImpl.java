@@ -21,7 +21,7 @@ public class UserServiceImpl implements UserService {
 
     private void validate(User user) {
         if (repository.checkDuplicateEmail(user)) {
-            throw new ConflictException("Пользователь с таким email уже зарегистрирован");
+            throw new ConflictException("A user with this email is already registered");
         }
     }
 

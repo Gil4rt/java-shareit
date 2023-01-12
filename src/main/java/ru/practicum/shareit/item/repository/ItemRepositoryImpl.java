@@ -7,9 +7,9 @@ import java.util.*;
 
 @Component
 public class ItemRepositoryImpl implements ItemRepository {
+    private static long itemId;
     private Map<Long, Item> items;
     private Map<Long, Map<Long, Item>> userItems;
-    private static long itemId;
 
     public ItemRepositoryImpl() {
         items = new HashMap<>();
