@@ -7,9 +7,9 @@ import java.util.Collection;
 import java.util.Optional;
 
 public interface ItemService {
-    Collection<Item> findUserItems(long userId);
+    Collection<ItemDto> findUserItems(long userId);
 
-    Item saveItem(ItemDto itemDto, long userId);
+    ItemDto saveItem(ItemDto itemDto, long userId);
 
     Optional<Item> updateItem(long itemId, ItemDto itemDto, long userId);
 
@@ -17,5 +17,5 @@ public interface ItemService {
 
     Optional<Item> getItem(long id);
 
-    Collection<Item> searchItems(String text);
+    Collection<ItemDto> searchItems(String text);
 }

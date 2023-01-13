@@ -20,13 +20,15 @@ public class ItemServiceImpl implements ItemService {
     private final ItemRepository repository;
     private final UserRepository userRepository;
 
+    private final ItemMapper itemMapper;
+
     @Override
-    public Collection<Item> findUserItems(long userId) {
-        return repository.findUserItems(userId);
+    public Collection<ItemDto> findUserItems(long userId) {
+        return itemMapper.toItemDtoCollection(repository.findUserItems(userId));
     }
 
     @Override
-    public Item saveItem(ItemDto itemDto, long userId) {
+    public ItemDto saveItem(ItemDto itemDto, long userId) {
         if (itemDto.getAvailable() == null) {
             throw new ValidationException("The status of the item has not been transferred");
         }
@@ -34,8 +36,8 @@ public class ItemServiceImpl implements ItemService {
             throw new NotFoundException(String.format("User (id = %s) not found", userId));
         }
         User user = userRepository.get(userId).get();
-        Item item = ItemMapper.toItem(itemDto, user, null);
-        return repository.save(item);
+        Item item = itemMapper.toItem(itemDto, user, null);
+        return itemMapper.toItemDto(repository.save(item));
     }
 
     @Override
@@ -45,7 +47,7 @@ public class ItemServiceImpl implements ItemService {
         }
         User user = userRepository.get(userId).get();
         itemDto.setId(itemId);
-        Item item = ItemMapper.toItem(itemDto, user, null);
+        Item item = itemMapper.toItem(itemDto, user, null);
         if (!getItem(itemId).isPresent()) {
             throw new NotFoundException(String.format("Item (id = %s) not found", itemId));
         } else if (!getItem(itemId).get().getOwner().equals(user)) {
@@ -66,7 +68,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Collection<Item> searchItems(String text) {
-        return repository.search(text);
+    public Collection<ItemDto> searchItems(String text) {
+        return itemMapper.toItemDtoCollection(repository.search(text));
     }
 }

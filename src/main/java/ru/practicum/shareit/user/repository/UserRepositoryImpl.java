@@ -1,21 +1,19 @@
 package ru.practicum.shareit.user.repository;
 
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.user.User;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
-@Component
+@Repository
 public class UserRepositoryImpl implements UserRepository {
     private static long userId;
     private Map<Long, User> users;
     private Map<String, Long> emails;
 
     public UserRepositoryImpl() {
-        users = new HashMap<>();
+        users = new LinkedHashMap<>();
         emails = new HashMap<>();
     }
 

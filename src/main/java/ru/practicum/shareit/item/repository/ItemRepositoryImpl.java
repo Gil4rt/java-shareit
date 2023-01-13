@@ -9,7 +9,7 @@ import java.util.*;
 public class ItemRepositoryImpl implements ItemRepository {
     private static long itemId;
     private Map<Long, Item> items;
-    private Map<Long, Map<Long, Item>> userItems;
+    private Map<Long, List> userItems;
 
     public ItemRepositoryImpl() {
         items = new HashMap<>();
@@ -21,8 +21,8 @@ public class ItemRepositoryImpl implements ItemRepository {
     }
 
     @Override
-    public Collection<Item> findUserItems(long userId) {
-        return userItems.get(userId).values();
+    public List<Item> findUserItems(long userId) {
+        return userItems.get(userId);
     }
 
     @Override
@@ -30,12 +30,12 @@ public class ItemRepositoryImpl implements ItemRepository {
         item.setId(generateId());
         items.put(item.getId(), item);
         if (item.getOwner() != null) {
-            Map<Long, Item> itemMap = userItems.get(item.getOwner().getId());
-            if (itemMap == null) {
-                itemMap = new HashMap<>();
+            List itemList = userItems.get(item.getOwner().getId());
+            if (itemList == null) {
+                itemList = new ArrayList();
             }
-            itemMap.put(item.getId(), item);
-            userItems.put(item.getOwner().getId(), itemMap);
+            itemList.add(item);
+            userItems.put(item.getOwner().getId(), itemList);
         }
         return item;
     }
@@ -61,7 +61,7 @@ public class ItemRepositoryImpl implements ItemRepository {
     @Override
     public boolean delete(long id, long userId) {
         if (userItems.get(userId) != null &&
-                userItems.get(userId).get(id) != null) {
+                userItems.get(userId) != null) {
             items.remove(id);
             userItems.get(userId).remove(id);
             return true;
