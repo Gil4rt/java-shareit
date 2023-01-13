@@ -30,7 +30,7 @@ public class UserController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable long id, @RequestBody User user) {
+    public ResponseEntity<UserDto> updateUser(@PathVariable long id, @RequestBody User user) {
         user.setId(id);
         return service.updateUser(user).map(updatedUser -> new ResponseEntity<>(updatedUser, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));

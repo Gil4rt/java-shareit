@@ -36,9 +36,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> updateUser(User user) {
+    public Optional<UserDto> updateUser(User user) {
         validate(user);
-        return repository.update(user);
+        return Optional.of(userMapper.toUserDto(repository.update(user).get()));
     }
 
     @Override
