@@ -5,7 +5,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
 
 import javax.validation.Valid;
@@ -37,8 +36,8 @@ public class ItemController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<Item> findItemById(@PathVariable long id) {
-        return service.getItem(id).map(item -> new ResponseEntity<>(item, HttpStatus.OK))
+    public ResponseEntity<ItemDto> findItemById(@PathVariable long id) {
+        return service.getItemDto(id).map(item -> new ResponseEntity<>(item, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 

@@ -71,6 +71,11 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    public Optional<ItemDto> getItemDto(long id) {
+        return Optional.of(itemMapper.toItemDto(repository.get(id)));
+    }
+
+    @Override
     public Collection<ItemDto> searchItems(String text) {
         return itemMapper.toItemDtoCollection(repository.search(text));
     }

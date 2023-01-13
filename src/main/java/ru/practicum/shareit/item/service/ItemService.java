@@ -17,5 +17,7 @@ public interface ItemService {
 
     Optional<Item> getItem(long id);
 
+    Optional<ItemDto> getItemDto(long id);
+
     Collection<ItemDto> searchItems(String text);
 }
