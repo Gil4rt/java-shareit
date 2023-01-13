@@ -1,11 +1,12 @@
 package ru.practicum.shareit.item.repository;
 
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.item.model.Item;
 
 import java.util.*;
 
-@Component
+@Repository
 public class ItemRepositoryImpl implements ItemRepository {
     private static long itemId;
     private Map<Long, Item> items;
