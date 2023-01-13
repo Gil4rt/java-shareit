@@ -17,6 +17,7 @@ public class UserMapper {
                 user.getEmail()
         );
     }
+
     public User toUser(UserDto userDto) {
         return new User(
                 userDto.getId(),
@@ -25,10 +26,10 @@ public class UserMapper {
         );
     }
 
-   public Collection<UserDto> toUserDtoCollection(Collection<User> users) {
+    public Collection<UserDto> toUserDtoCollection(Collection<User> users) {
         return users.stream()
                 .map(this::toUserDto)
                 .collect(Collectors.toList());
-   }
+    }
 
 }

@@ -3,7 +3,8 @@ package ru.practicum.shareit.user.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.ConflictException;
-
+import ru.practicum.shareit.user.UserMapper;
+import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
@@ -15,9 +16,11 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
     private final UserRepository repository;
 
+    private final UserMapper userMapper;
+
     @Override
-    public Collection<User> getAllUsers() {
-        return repository.findAll();
+    public Collection<UserDto> getAllUsers() {
+        return userMapper.toUserDtoCollection(repository.findAll());
     }
 
     private void validate(User user) {
@@ -27,9 +30,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User saveUser(User user) {
+    public UserDto saveUser(User user) {
         validate(user);
-        return repository.save(user);
+        return userMapper.toUserDto(repository.save(user));
     }
 
     @Override
@@ -46,5 +49,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<User> getUser(long id) {
         return repository.get(id);
+    }
+
+    @Override
+    public Optional<UserDto> getUserDto(long id) {
+        return Optional.of(userMapper.toUserDto(repository.get(id).get()));
     }
 }
