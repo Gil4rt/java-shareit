@@ -10,7 +10,6 @@ import ru.practicum.shareit.item.service.ItemService;
 
 import javax.validation.Valid;
 import java.util.Collection;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,8 +30,8 @@ public class ItemController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<ItemDto> updateItem(@PathVariable long id,
-                                           @RequestBody ItemDto itemDto,
-                                           @RequestHeader("X-Sharer-User-Id") long userId) {
+                                              @RequestBody ItemDto itemDto,
+                                              @RequestHeader("X-Sharer-User-Id") long userId) {
         return new ResponseEntity<>(service.updateItem(id, itemDto, userId), HttpStatus.OK);
     }
 
