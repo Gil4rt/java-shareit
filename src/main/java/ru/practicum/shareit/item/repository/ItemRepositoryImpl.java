@@ -41,21 +41,23 @@ public class ItemRepositoryImpl implements ItemRepository {
     }
 
     @Override
-    public Optional<Item> update(Item item) {
-        if (items.get(item.getId()) != null) {
-            if (item.getName() != null) {
-                items.get(item.getId()).setName(item.getName());
-            }
-            if (item.getDescription() != null) {
-                items.get(item.getId()).setDescription(item.getDescription());
-            }
-            if (item.getAvailable() != null) {
-                items.get(item.getId()).setAvailable(item.getAvailable());
-            }
-            return Optional.of(items.get(item.getId()));
-        } else {
-            return Optional.empty();
+    public Item update(Item item) {
+
+        Item oldItem = items.get(item.getId());
+
+        if (item.getName() != null) {
+            oldItem.setName(item.getName());
         }
+        if (item.getDescription() != null) {
+            oldItem.setDescription(item.getDescription());
+        }
+        if (item.getAvailable() != null) {
+            oldItem.setAvailable(item.getAvailable());
+        }
+
+        items.put(item.getId(), oldItem);
+
+        return oldItem;
     }
 
     @Override
@@ -71,11 +73,11 @@ public class ItemRepositoryImpl implements ItemRepository {
     }
 
     @Override
-    public Optional<Item> get(long id) {
+    public Item get(long id) {
         if (items.get(id) != null) {
-            return Optional.of(items.get(id));
+            return items.get(id);
         } else {
-            return Optional.empty();
+            return null;
         }
     }
 

@@ -41,7 +41,8 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Optional<Item> updateItem(long itemId, ItemDto itemDto, long userId) {
+    public ItemDto updateItem(long itemId, ItemDto itemDto, long userId) {
+
         if (!userRepository.get(userId).isPresent()) {
             throw new NotFoundException(String.format("User (id = %s) not found", userId));
         }
@@ -54,7 +55,9 @@ public class ItemServiceImpl implements ItemService {
             throw new NotFoundException(String.format(
                     "Item (id = %s) was not found on the user (id = %s)", itemId, userId));
         }
-        return repository.update(item);
+
+
+        return itemMapper.toItemDto(repository.update(item));
     }
 
     @Override
@@ -64,7 +67,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public Optional<Item> getItem(long id) {
-        return repository.get(id);
+        return Optional.of(repository.get(id));
     }
 
     @Override

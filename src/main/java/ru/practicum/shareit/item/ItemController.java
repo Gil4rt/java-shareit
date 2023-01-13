@@ -30,15 +30,10 @@ public class ItemController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Item> updateItem(@PathVariable long id,
+    public ResponseEntity<ItemDto> updateItem(@PathVariable long id,
                                            @RequestBody ItemDto itemDto,
                                            @RequestHeader("X-Sharer-User-Id") long userId) {
-        Optional<Item> item = service.getItem(id);
-        if (!item.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        service.updateItem(id, itemDto, userId);
-        return new ResponseEntity<>(item.get(), HttpStatus.OK);
+        return new ResponseEntity<>(service.updateItem(id, itemDto, userId), HttpStatus.OK);
     }
 
 

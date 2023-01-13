@@ -11,7 +11,7 @@ public interface ItemService {
 
     ItemDto saveItem(ItemDto itemDto, long userId);
 
-    Optional<Item> updateItem(long itemId, ItemDto itemDto, long userId);
+    ItemDto updateItem(long itemId, ItemDto itemDto, long userId);
 
     boolean deleteItem(long id, long userId);
 

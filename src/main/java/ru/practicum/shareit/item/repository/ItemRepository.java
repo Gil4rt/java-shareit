@@ -10,11 +10,11 @@ public interface ItemRepository {
 
     Item save(Item item);
 
-    Optional<Item> update(Item item);
+    Item update(Item item);
 
     boolean delete(long id, long userId);
 
-    Optional<Item> get(long id);
+    Item get(long id);
 
     Collection<Item> search(String text);
 
