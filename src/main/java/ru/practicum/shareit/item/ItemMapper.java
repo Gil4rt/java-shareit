@@ -8,6 +8,7 @@ import ru.practicum.shareit.user.User;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
+
 @Component
 public class ItemMapper {
     public ItemDto toItemDto(Item item) {
@@ -31,6 +32,7 @@ public class ItemMapper {
                 itemRequest
         );
     }
+
     public Collection<ItemDto> toItemDtoCollection(Collection<Item> items) {
         return items.stream()
                 .map(this::toItemDto)

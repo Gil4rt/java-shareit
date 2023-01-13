@@ -25,21 +25,21 @@ public class ItemController {
 
     @PostMapping
     public ResponseEntity<ItemDto> createItem(@Valid @RequestBody ItemDto itemDto,
-                                           @RequestHeader("X-Sharer-User-Id") long userId) {
+                                              @RequestHeader("X-Sharer-User-Id") long userId) {
         return new ResponseEntity<>(service.saveItem(itemDto, userId), HttpStatus.CREATED);
     }
 
-        @PatchMapping("/{id}")
-        public ResponseEntity<Item> updateItem(@PathVariable long id,
-                                               @RequestBody ItemDto itemDto,
-                                               @RequestHeader("X-Sharer-User-Id") long userId) {
-            Optional<Item> item = service.getItem(id);
-            if (!item.isPresent()) {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
-            service.updateItem(id, itemDto, userId);
-            return new ResponseEntity<>(item.get(), HttpStatus.OK);
+    @PatchMapping("/{id}")
+    public ResponseEntity<Item> updateItem(@PathVariable long id,
+                                           @RequestBody ItemDto itemDto,
+                                           @RequestHeader("X-Sharer-User-Id") long userId) {
+        Optional<Item> item = service.getItem(id);
+        if (!item.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+        service.updateItem(id, itemDto, userId);
+        return new ResponseEntity<>(item.get(), HttpStatus.OK);
+    }
 
 
     @GetMapping("/{id}")
@@ -50,7 +50,7 @@ public class ItemController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ItemDto> deleteItemById(@PathVariable long id,
-                                               @RequestHeader("X-Sharer-User-Id") long userId) {
+                                                  @RequestHeader("X-Sharer-User-Id") long userId) {
         return service.deleteItem(id, userId) ? new ResponseEntity<>(HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
