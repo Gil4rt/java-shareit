@@ -14,6 +14,4 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
             "   and (upper(i.name) like upper(concat('%', ?1, '%')) or " +
             "        upper(i.description) like upper(concat('%', ?1, '%')))")
     Collection<Item> search(String text);
-
-    Collection<Item> findByRequestId(long requestId);
 }
