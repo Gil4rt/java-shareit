@@ -6,8 +6,6 @@ import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemFullDto;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.request.model.ItemRequest;
-import ru.practicum.shareit.user.model.User;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,39 +14,6 @@ import java.util.stream.Collectors;
 
 @Component
 public class ItemMapper {
-    public ItemDto toItemDto(Item item) {
-        return new ItemDto(
-                item.getId(),
-                item.getName(),
-                item.getDescription(),
-                item.getAvailable()
-        );
-    }
-
-    public Item toItem(ItemDto itemDto, Long ownerId, Long requestId) {
-        Item item = new Item();
-        item.setId(itemDto.getId());
-        item.setName(itemDto.getName());
-        item.setDescription(itemDto.getDescription());
-        item.setAvailable(itemDto.getAvailable());
-        item.setOwner(ownerId);
-        item.setItemRequest(requestId);
-        return item;
-    }
-    public Item toItem(ItemDto itemDto, Item itemOld) {
-        Item item = itemOld;
-        item.setName(itemDto.getName() == null ? itemOld.getName() : itemDto.getName());
-        item.setDescription(itemDto.getDescription() == null ? itemOld.getDescription() : itemDto.getDescription());
-        item.setAvailable(itemDto.getAvailable() == null ? itemOld.getAvailable() : itemDto.getAvailable());
-        return item;
-    }
-
-
-    public Collection<ItemDto> toItemDtoCollection(Collection<Item> items) {
-        return items.stream()
-                .map(this::toItemDto)
-                .collect(Collectors.toList());
-    }
     public static ItemFullDto toItemFullDto(Item item,
                                             Optional<Booking> lastBooking,
                                             Optional<Booking> nextBooking,
@@ -72,5 +37,39 @@ public class ItemMapper {
             }
         }
         return itemFullDto;
+    }
+
+    public ItemDto toItemDto(Item item) {
+        return new ItemDto(
+                item.getId(),
+                item.getName(),
+                item.getDescription(),
+                item.getAvailable()
+        );
+    }
+
+    public Item toItem(ItemDto itemDto, Long ownerId, Long requestId) {
+        Item item = new Item();
+        item.setId(itemDto.getId());
+        item.setName(itemDto.getName());
+        item.setDescription(itemDto.getDescription());
+        item.setAvailable(itemDto.getAvailable());
+        item.setOwner(ownerId);
+        item.setItemRequest(requestId);
+        return item;
+    }
+
+    public Item toItem(ItemDto itemDto, Item itemOld) {
+        Item item = itemOld;
+        item.setName(itemDto.getName() == null ? itemOld.getName() : itemDto.getName());
+        item.setDescription(itemDto.getDescription() == null ? itemOld.getDescription() : itemDto.getDescription());
+        item.setAvailable(itemDto.getAvailable() == null ? itemOld.getAvailable() : itemDto.getAvailable());
+        return item;
+    }
+
+    public Collection<ItemDto> toItemDtoCollection(Collection<Item> items) {
+        return items.stream()
+                .map(this::toItemDto)
+                .collect(Collectors.toList());
     }
 }

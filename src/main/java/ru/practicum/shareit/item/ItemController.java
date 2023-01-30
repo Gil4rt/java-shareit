@@ -54,6 +54,7 @@ public class ItemController {
     public Collection<ItemDto> searchItems(@RequestParam(required = false) String text) {
         return itemService.searchItems(text);
     }
+
     @PostMapping("/{id}/comment")
     public ResponseEntity<CommentDto> addItemComment(@PathVariable long id,
                                                      @Valid @RequestBody CommentDto commentDto,

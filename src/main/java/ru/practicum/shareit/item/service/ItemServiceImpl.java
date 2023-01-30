@@ -89,6 +89,7 @@ public class ItemServiceImpl implements ItemService {
             return false;
         }
     }
+
     @Override
     public Optional<ItemFullDto> getItem(long id, long userId) {
         Optional<Item> item = repository.findById(id);
@@ -128,6 +129,7 @@ public class ItemServiceImpl implements ItemService {
         }
         return user.get();
     }
+
     private Optional<Item> validateUserItem(long itemId, long userId) {
         Optional<Item> item = repository.findById(itemId);
         if (!item.isPresent()) {
@@ -138,6 +140,7 @@ public class ItemServiceImpl implements ItemService {
         }
         return item;
     }
+
     private boolean validateBookingItem(long itemId, long userId) {
         Optional<Booking> booking = bookingRepository.findByItemIdAndBookerIdAndStatusAndEndBefore(
                 itemId, userId, BookingStatus.APPROVED, LocalDateTime.now());
