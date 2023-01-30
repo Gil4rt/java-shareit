@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS users
     email VARCHAR(512)                            NOT NULL,
     CONSTRAINT pk_user PRIMARY KEY (id),
     CONSTRAINT UQ_USER_EMAIL UNIQUE (email)
-    );
+);
 
 CREATE TABLE IF NOT EXISTS items
 (
@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS items
     request_id   BIGINT,
     CONSTRAINT pk_items PRIMARY KEY (id),
     CONSTRAINT fk_items_to_users FOREIGN KEY (owner_id) REFERENCES users (id)
-    );
+);
 
 CREATE TABLE IF NOT EXISTS bookings
 (
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS bookings
     CONSTRAINT pk_bookings PRIMARY KEY (id),
     CONSTRAINT fk_bookings_to_items FOREIGN KEY (item_id) REFERENCES items (id),
     CONSTRAINT fk_bookings_to_users FOREIGN KEY (booker_id) REFERENCES users (id)
-    );
+);
 
 CREATE TABLE IF NOT EXISTS requests
 (
@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS requests
     requestor_id BIGINT                                  NOT NULL,
     CONSTRAINT pk_requests PRIMARY KEY (id),
     CONSTRAINT fk_requests_to_users FOREIGN KEY (requestor_id) REFERENCES users (id)
-    );
+);
 
 CREATE TABLE IF NOT EXISTS comments
 (
@@ -51,4 +51,4 @@ CREATE TABLE IF NOT EXISTS comments
     CONSTRAINT pk_comments PRIMARY KEY (id),
     CONSTRAINT fk_comments_to_items FOREIGN KEY (item_id) REFERENCES items (id),
     CONSTRAINT fk_comments_to_users FOREIGN KEY (author_id) REFERENCES users (id)
-    );
+);
