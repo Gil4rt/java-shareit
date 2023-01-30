@@ -8,15 +8,15 @@ import java.util.Optional;
 
 public interface UserService {
 
-    Collection<UserDto> getAllUsers();
+    Collection<UserDto> findAll();
 
-    UserDto saveUser(User user);
+    UserDto save(UserDto userDto);
 
-    Optional<UserDto> updateUser(User user);
+    Optional<UserDto> update(Long userId, UserDto userDto);
 
-    boolean deleteUser(long id);
+    boolean delete(long userId);
 
-    Optional<User> getUser(long id);
+    Optional<User> getUser(long userId);
 
-    Optional<UserDto> getUserDto(long id);
+    Optional<UserDto> getUserDto(long userId);
 }

@@ -17,34 +17,33 @@ import java.util.Collection;
 @RequestMapping(path = "/users")
 public class UserController {
 
-    private final UserService service;
+    private final UserService userService;
 
     @GetMapping
     public Collection<UserDto> getAllUsers() {
-        return service.getAllUsers();
+        return userService.findAll();
     }
 
     @PostMapping
-    public ResponseEntity<UserDto> createUser(@Valid @RequestBody User user) {
-        return new ResponseEntity<>(service.saveUser(user), HttpStatus.CREATED);
+    public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto) {
+        return new ResponseEntity<>(userService.save(userDto), HttpStatus.CREATED);
     }
-
     @PatchMapping("/{id}")
-    public ResponseEntity<UserDto> updateUser(@PathVariable long id, @RequestBody User user) {
-        user.setId(id);
-        return service.updateUser(user).map(updatedUser -> new ResponseEntity<>(updatedUser, HttpStatus.OK))
+    public ResponseEntity<UserDto> updateUser(@PathVariable long id, @RequestBody UserDto userDto) {
+        userDto.setId(id);
+        return userService.update(id, userDto).map(updatedUser -> new ResponseEntity<>(updatedUser, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<UserDto> findUserById(@PathVariable long id) {
-        return service.getUserDto(id).map(user -> new ResponseEntity<>(user, HttpStatus.OK))
+        return userService.getUserDto(id).map(user -> new ResponseEntity<>(user, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<UserDto> deleteUserById(@PathVariable long id) {
-        return service.deleteUser(id) ? new ResponseEntity<>(HttpStatus.OK)
+        return userService.delete(id) ? new ResponseEntity<>(HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }

@@ -17,21 +17,28 @@ public class ItemMapper {
                 item.getName(),
                 item.getDescription(),
                 item.getAvailable(),
-                item.getItemRequest() != null ? item.getItemRequest().getId() : null
-
+                item.getRequestId()
         );
     }
 
-    public Item toItem(ItemDto itemDto, User owner, ItemRequest itemRequest) {
-        return new Item(
-                itemDto.getId(),
-                itemDto.getName(),
-                itemDto.getDescription(),
-                itemDto.getAvailable(),
-                owner,
-                itemRequest
-        );
+    public Item toItem(ItemDto itemDto, Long ownerId) {
+        Item item = new Item();
+        item.setId(itemDto.getId());
+        item.setName(itemDto.getName());
+        item.setDescription(itemDto.getDescription());
+        item.setAvailable(itemDto.getAvailable());
+        item.setOwner(ownerId);
+        item.setRequestId(itemDto.getRequestId());
+        return item;
     }
+    public Item toItem(ItemDto itemDto, Item itemOld) {
+        Item item = itemOld;
+        item.setName(itemDto.getName() == null ? itemOld.getName() : itemDto.getName());
+        item.setDescription(itemDto.getDescription() == null ? itemOld.getDescription() : itemDto.getDescription());
+        item.setAvailable(itemDto.getAvailable() == null ? itemOld.getAvailable() : itemDto.getAvailable());
+        return item;
+    }
+
 
     public Collection<ItemDto> toItemDtoCollection(Collection<Item> items) {
         return items.stream()

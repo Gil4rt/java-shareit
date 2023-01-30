@@ -7,7 +7,6 @@ import lombok.Setter;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
-@AllArgsConstructor
 @Getter
 @Setter
 public class UserDto {
