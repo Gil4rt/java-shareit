@@ -147,6 +147,7 @@ public class BookingServiceImpl implements BookingService {
             throw new ValidationException(String.format("Unknown state: %s", state));
         }
 
+        
         return reservations.stream()
                 .map(booking -> BookingMapper.toBookingFullDto(booking, booker, itemRepository.findById(booking.getItemId()).get()))
                 .collect(Collectors.toList());
