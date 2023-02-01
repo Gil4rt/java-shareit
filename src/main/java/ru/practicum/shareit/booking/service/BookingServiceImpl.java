@@ -20,7 +20,9 @@ import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -121,46 +123,35 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public Collection<BookingFullDto> findUserBookings(long bookerId, String state) {
-        log.info("Поиск бронирований от пользователя (id={}) для state = {}", bookerId, state);
+        log.info("Searching bookings from user (id={}) for state = {}", bookerId, state);
         User booker = validateUser(bookerId);
+        Sort sort = Sort.by(Sort.Direction.DESC, "start");
+        Collection<Booking> reservations;
+
         if (state.equals(BookingState.ALL.name())) {
-            return repository.findAllByBookerId(bookerId, Sort.by(Sort.Direction.DESC, "start"))
-                    .stream()
-                    .map(booking -> BookingMapper.toBookingFullDto(booking, booker, itemRepository.findById(booking.getItemId()).get()))
-                    .collect(Collectors.toList());
+            reservations = repository.findAllByBookerId(bookerId, sort);
         } else if (state.equals(BookingState.CURRENT.name())) {
-            return repository.findAllByBookerIdAndStartBeforeAndEndAfter(
-                            bookerId, LocalDateTime.now(), LocalDateTime.now(), Sort.by(Sort.Direction.DESC, "start"))
-                    .stream()
-                    .map(booking -> BookingMapper.toBookingFullDto(booking, booker, itemRepository.findById(booking.getItemId()).get()))
-                    .collect(Collectors.toList());
+            reservations = repository.findAllByBookerIdAndStartBeforeAndEndAfter(
+                    bookerId, LocalDateTime.now(), LocalDateTime.now(), sort);
         } else if (state.equals(BookingState.PAST.name())) {
-            return repository.findAllByBookerIdAndEndBefore(
-                            bookerId, LocalDateTime.now(), Sort.by(Sort.Direction.DESC, "start"))
-                    .stream()
-                    .map(booking -> BookingMapper.toBookingFullDto(booking, booker, itemRepository.findById(booking.getItemId()).get()))
-                    .collect(Collectors.toList());
+            reservations = repository.findAllByBookerIdAndEndBefore(
+                    bookerId, LocalDateTime.now(), sort);
         } else if (state.equals(BookingState.FUTURE.name())) {
-            return repository.findAllByBookerIdAndStartAfter(
-                            bookerId, LocalDateTime.now(), Sort.by(Sort.Direction.DESC, "start"))
-                    .stream()
-                    .map(booking -> BookingMapper.toBookingFullDto(booking, booker, itemRepository.findById(booking.getItemId()).get()))
-                    .collect(Collectors.toList());
+            reservations = repository.findAllByBookerIdAndStartAfter(
+                    bookerId, LocalDateTime.now(), sort);
         } else if (state.equals(BookingState.WAITING.name())) {
-            return repository.findAllByBookerIdAndStatus(
-                            bookerId, BookingStatus.WAITING, Sort.by(Sort.Direction.DESC, "start"))
-                    .stream()
-                    .map(booking -> BookingMapper.toBookingFullDto(booking, booker, itemRepository.findById(booking.getItemId()).get()))
-                    .collect(Collectors.toList());
+            reservations = repository.findAllByBookerIdAndStatus(
+                    bookerId, BookingStatus.WAITING, sort);
         } else if (state.equals(BookingState.REJECTED.name())) {
-            return repository.findAllByBookerIdAndStatus(
-                            bookerId, BookingStatus.REJECTED, Sort.by(Sort.Direction.DESC, "start"))
-                    .stream()
-                    .map(booking -> BookingMapper.toBookingFullDto(booking, booker, itemRepository.findById(booking.getItemId()).get()))
-                    .collect(Collectors.toList());
+            reservations = repository.findAllByBookerIdAndStatus(
+                    bookerId, BookingStatus.REJECTED, sort);
         } else {
             throw new ValidationException(String.format("Unknown state: %s", state));
         }
+
+        return reservations.stream()
+                .map(booking -> BookingMapper.toBookingFullDto(booking, booker, itemRepository.findById(booking.getItemId()).get()))
+                .collect(Collectors.toList());
     }
 
     @Override
