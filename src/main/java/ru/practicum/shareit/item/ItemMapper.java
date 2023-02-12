@@ -44,18 +44,19 @@ public class ItemMapper {
                 item.getId(),
                 item.getName(),
                 item.getDescription(),
-                item.getAvailable()
+                item.getAvailable(),
+                item.getRequestId()
         );
     }
 
-    public Item toItem(ItemDto itemDto, Long ownerId, Long requestId) {
+    public Item toItem(ItemDto itemDto, Long ownerId) {
         Item item = new Item();
         item.setId(itemDto.getId());
         item.setName(itemDto.getName());
         item.setDescription(itemDto.getDescription());
         item.setAvailable(itemDto.getAvailable());
         item.setOwner(ownerId);
-        item.setRequestId(requestId);
+        item.setRequestId(itemDto.getRequestId());
         return item;
     }
 

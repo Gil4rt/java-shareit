@@ -62,7 +62,7 @@ public class ItemServiceImpl implements ItemService {
             throw new ValidationException("The status of the item has not been transferred");
         }
         validateUser(userId);
-        Item item = itemMapper.toItem(itemDto, userId, null);
+        Item item = itemMapper.toItem(itemDto, userId);
         return itemMapper.toItemDto(repository.save(item));
     }
 

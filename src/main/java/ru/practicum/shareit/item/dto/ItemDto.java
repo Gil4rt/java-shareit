@@ -16,4 +16,5 @@ public class ItemDto {
     @NotBlank(message = "Description is required")
     private String description;
     private Boolean available;
+    private Long requestId;
 }
