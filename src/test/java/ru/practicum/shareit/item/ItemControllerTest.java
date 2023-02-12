@@ -46,15 +46,10 @@ class ItemControllerTest {
     private LocalDateTime end = start.plusDays(7);
 
     private LocalDateTime commentCreated = end.plusDays(1);
-
-    private ItemDto itemDto = new ItemDto(1L, "Дрель", "Инструмент для сверления", true, 2L);
-
-    private Item item = new Item();
-
-    private ItemFullDto itemFullDto = new ItemFullDto();
-
     private CommentDto commentDto = new CommentDto(1L, "Не хватает ударной функции", "Dima", commentCreated);
-
+    private ItemDto itemDto = new ItemDto(1L, "Дрель", "Инструмент для сверления", true, 2L);
+    private Item item = new Item();
+    private ItemFullDto itemFullDto = new ItemFullDto();
     private Booking booking = new Booking();
 
     @BeforeEach

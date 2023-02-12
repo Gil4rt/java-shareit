@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.repository.BookingRepository;
@@ -21,7 +20,6 @@ import ru.practicum.shareit.item.repository.CommentRepository;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.item.service.ItemServiceImpl;
-
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
@@ -123,12 +121,12 @@ class ItemServiceImplTest {
                 .thenReturn(item);
 
         // when
-        final NotFoundException notFoundException = Assertions.assertThrows(
-                NotFoundException.class,
+        final ValidationException validationException = Assertions.assertThrows(
+                ValidationException.class,
                 () -> itemService.saveItem(itemDto, 2L));
 
         // then
-        Assertions.assertEquals("Пользователь (id = 2) не найден", notFoundException.getMessage());
+        Assertions.assertEquals("User (id = 2) not found", validationException.getMessage());
     }
 
     @Test
@@ -158,7 +156,7 @@ class ItemServiceImplTest {
                 () -> itemService.saveItem(itemDto, 1L));
 
         // then
-        Assertions.assertEquals("Не передан статус вещи", validationException.getMessage());
+        Assertions.assertEquals("The status of the item has not been transferred", validationException.getMessage());
     }
 
     @Test
@@ -217,7 +215,7 @@ class ItemServiceImplTest {
                 () -> itemService.updateItem(2L, itemDto, 1L));
 
         // then
-        Assertions.assertEquals("Вещь (id = 2) не найдена", notFoundException.getMessage());
+        Assertions.assertEquals("Item (id = 2) not found", notFoundException.getMessage());
     }
 
     @Test
@@ -251,7 +249,7 @@ class ItemServiceImplTest {
                 () -> itemService.updateItem(1L, itemDto, 2L));
 
         // then
-        Assertions.assertEquals("Вещь (id = 1) не найдена у пользователя (id = 2)",
+        Assertions.assertEquals("Item (id = 1) was not found on the user (id = 2)",
                 notFoundException.getMessage());
     }
 
