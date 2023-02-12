@@ -55,7 +55,7 @@ public class ItemMapper {
         item.setDescription(itemDto.getDescription());
         item.setAvailable(itemDto.getAvailable());
         item.setOwner(ownerId);
-        item.setItemRequest(requestId);
+        item.setRequestId(requestId);
         return item;
     }
 
