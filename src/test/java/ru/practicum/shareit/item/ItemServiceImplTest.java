@@ -104,6 +104,7 @@ class ItemServiceImplTest {
             sourceItem.setId(id++);
         }
     }
+
     @Test
     void saveItemStatusIsNotTransferred() {
         // given
