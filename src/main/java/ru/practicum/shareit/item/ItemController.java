@@ -18,7 +18,7 @@ import java.util.Collection;
 public class ItemController {
     private final ItemService itemService;
 
-    private final String X_SHARER_USER_ID = "X-Sharer-User-Id";
+    private static final String X_SHARER_USER_ID = "X-Sharer-User-Id";
 
     @GetMapping
     public Collection<ItemFullDto> findItemItems(@RequestHeader(X_SHARER_USER_ID) long userId) {

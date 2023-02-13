@@ -18,7 +18,7 @@ import java.util.Collection;
 public class ItemRequestController {
     private final ItemRequestService service;
 
-    private final String X_SHARER_USER_ID = "X-Sharer-User-Id";
+    private static final String X_SHARER_USER_ID = "X-Sharer-User-Id";
 
     @PostMapping
     public ResponseEntity<ItemRequest> createItemRequest(@Valid @RequestBody ItemRequestDto itemRequestDto,
