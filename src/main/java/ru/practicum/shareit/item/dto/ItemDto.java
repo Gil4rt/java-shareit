@@ -1,20 +1,23 @@
 package ru.practicum.shareit.item.dto;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 import javax.validation.constraints.NotBlank;
 
 @Getter
 @Setter
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ItemDto {
-    private long id;
+    long id;
     @NotBlank(message = "Name is required")
-    private String name;
+    String name;
     @NotBlank(message = "Description is required")
-    private String description;
-    private Boolean available;
-    private Long requestId;
+    String description;
+    Boolean available;
+    Long requestId;
 }
