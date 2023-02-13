@@ -3,16 +3,22 @@ package ru.practicum.shareit.request.model;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
-/**
- * TODO Sprint add-item-requests.
- */
+
 @Getter
 @Setter
+@Entity
+@Table(name = "requests", schema = "public")
 public class ItemRequest {
-    private long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column
     private String description;
-    private long requester;
+    @Column(name = "requestor_id")
+    private Long requestor;
+    @Column
     private LocalDateTime created;
 }

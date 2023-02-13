@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingFullDto;
+import ru.practicum.shareit.booking.model.BookingState;
 import ru.practicum.shareit.booking.service.BookingService;
 
 import javax.validation.Valid;
@@ -28,7 +29,8 @@ public class BookingController {
     public ResponseEntity<BookingFullDto> updateBooking(@PathVariable long id,
                                                         @RequestHeader("X-Sharer-User-Id") long userId,
                                                         @RequestParam Boolean approved) {
-        return service.updateBooking(id, userId, approved).map(updatedBooking -> new ResponseEntity<>(updatedBooking, HttpStatus.OK))
+        return service.updateBooking(id, userId, approved)
+                .map(updatedBooking -> new ResponseEntity<>(updatedBooking, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
@@ -41,13 +43,18 @@ public class BookingController {
 
     @GetMapping
     public Collection<BookingFullDto> findUserBookings(@RequestHeader("X-Sharer-User-Id") long userId,
-                                                       @RequestParam(defaultValue = "ALL") String state) {
-        return service.findUserBookings(userId, state);
+                                                       @RequestParam(defaultValue = "ALL") String state,
+                                                       @RequestParam(defaultValue = "0") int from,
+                                                       @RequestParam(defaultValue = "20") int size) {
+        return service.findUserBookings(userId, state, from, size);
     }
 
     @GetMapping("/owner")
     public Collection<BookingFullDto> findOwnerBookings(@RequestHeader("X-Sharer-User-Id") long userId,
-                                                        @RequestParam(defaultValue = "ALL") String state) {
-        return service.findOwnerBookings(userId, state);
+                                                        @RequestParam(defaultValue = "ALL") String state,
+                                                        @RequestParam(defaultValue = "0") int from,
+                                                        @RequestParam(defaultValue = "20") int size) {
+        BookingState.validateState(state);
+        return service.findOwnerBookings(userId, state, from, size);
     }
 }
