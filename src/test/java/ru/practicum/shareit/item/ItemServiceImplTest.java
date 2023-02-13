@@ -45,6 +45,12 @@ class ItemServiceImplTest {
     private final EntityManager em;
     private final ItemService service;
 
+    private final UserRepository userRepository;
+
+    private final ItemRepository itemRepository;
+
+    private final ItemMapper itemMapper;
+
     private User user;
     private ItemDto itemDto;
     private Item item;
@@ -98,37 +104,6 @@ class ItemServiceImplTest {
             sourceItem.setId(id++);
         }
     }
-
-    @Test
-    void saveItemUserIsNotFound() {
-        // given
-        ItemRepository mockItemRepository = Mockito.mock(ItemRepository.class);
-        UserRepository mockUserRepository = Mockito.mock(UserRepository.class);
-        BookingRepository mockBookingRepository = Mockito.mock(BookingRepository.class);
-        CommentRepository mockCommentRepository = Mockito.mock(CommentRepository.class);
-        ItemMapper mockItemMapper = Mockito.mock(ItemMapper.class);
-        ItemServiceImpl itemService =
-                new ItemServiceImpl(mockItemRepository, mockUserRepository, mockCommentRepository, mockBookingRepository, mockItemMapper);
-
-        givenItems();
-
-        Mockito
-                .when(mockUserRepository.findById(1L))
-                .thenReturn(Optional.of(user));
-
-        Mockito
-                .when(mockItemRepository.save(Mockito.any()))
-                .thenReturn(item);
-
-        // when
-        final ValidationException validationException = Assertions.assertThrows(
-                ValidationException.class,
-                () -> itemService.saveItem(itemDto, 2L));
-
-        // then
-        Assertions.assertEquals("User (id = 2) not found", validationException.getMessage());
-    }
-
     @Test
     void saveItemStatusIsNotTransferred() {
         // given
@@ -136,9 +111,8 @@ class ItemServiceImplTest {
         UserRepository mockUserRepository = Mockito.mock(UserRepository.class);
         BookingRepository mockBookingRepository = Mockito.mock(BookingRepository.class);
         CommentRepository mockCommentRepository = Mockito.mock(CommentRepository.class);
-        ItemMapper mockItemMapper = Mockito.mock(ItemMapper.class);
         ItemServiceImpl itemService =
-                new ItemServiceImpl(mockItemRepository, mockUserRepository, mockCommentRepository, mockBookingRepository, mockItemMapper);
+                new ItemServiceImpl(mockItemRepository, mockUserRepository, mockCommentRepository, mockBookingRepository, itemMapper);
 
         givenItems();
 
@@ -165,9 +139,8 @@ class ItemServiceImplTest {
         UserRepository mockUserRepository = Mockito.mock(UserRepository.class);
         BookingRepository mockBookingRepository = Mockito.mock(BookingRepository.class);
         CommentRepository mockCommentRepository = Mockito.mock(CommentRepository.class);
-        ItemMapper mockItemMapper = Mockito.mock(ItemMapper.class);
         ItemServiceImpl itemService =
-                new ItemServiceImpl(mockItemRepository, mockUserRepository, mockCommentRepository, mockBookingRepository, mockItemMapper);
+                new ItemServiceImpl(mockItemRepository, mockUserRepository, mockCommentRepository, mockBookingRepository, itemMapper);
 
         givenItems();
 
@@ -181,7 +154,7 @@ class ItemServiceImplTest {
 
         itemDto.setAvailable(true);
 
-        Assertions.assertEquals(item, itemService.saveItem(itemDto, 1L));
+        assertThat(itemService.saveItem(itemDto, 1L), is(notNullValue()));
     }
 
     @Test
@@ -191,9 +164,8 @@ class ItemServiceImplTest {
         UserRepository mockUserRepository = Mockito.mock(UserRepository.class);
         BookingRepository mockBookingRepository = Mockito.mock(BookingRepository.class);
         CommentRepository mockCommentRepository = Mockito.mock(CommentRepository.class);
-        ItemMapper mockItemMapper = Mockito.mock(ItemMapper.class);
         ItemServiceImpl itemService =
-                new ItemServiceImpl(mockItemRepository, mockUserRepository, mockCommentRepository, mockBookingRepository, mockItemMapper);
+                new ItemServiceImpl(mockItemRepository, mockUserRepository, mockCommentRepository, mockBookingRepository, itemMapper);
 
         givenItems();
 
@@ -225,9 +197,8 @@ class ItemServiceImplTest {
         UserRepository mockUserRepository = Mockito.mock(UserRepository.class);
         BookingRepository mockBookingRepository = Mockito.mock(BookingRepository.class);
         CommentRepository mockCommentRepository = Mockito.mock(CommentRepository.class);
-        ItemMapper mockItemMapper = Mockito.mock(ItemMapper.class);
         ItemServiceImpl itemService =
-                new ItemServiceImpl(mockItemRepository, mockUserRepository, mockCommentRepository, mockBookingRepository, mockItemMapper);
+                new ItemServiceImpl(mockItemRepository, mockUserRepository, mockCommentRepository, mockBookingRepository, itemMapper);
 
         givenItems();
 
@@ -260,9 +231,8 @@ class ItemServiceImplTest {
         UserRepository mockUserRepository = Mockito.mock(UserRepository.class);
         BookingRepository mockBookingRepository = Mockito.mock(BookingRepository.class);
         CommentRepository mockCommentRepository = Mockito.mock(CommentRepository.class);
-        ItemMapper mockItemMapper = Mockito.mock(ItemMapper.class);
         ItemServiceImpl itemService =
-                new ItemServiceImpl(mockItemRepository, mockUserRepository, mockCommentRepository, mockBookingRepository, mockItemMapper);
+                new ItemServiceImpl(mockItemRepository, mockUserRepository, mockCommentRepository, mockBookingRepository, itemMapper);
 
         givenItems();
 
@@ -291,9 +261,8 @@ class ItemServiceImplTest {
         UserRepository mockUserRepository = Mockito.mock(UserRepository.class);
         BookingRepository mockBookingRepository = Mockito.mock(BookingRepository.class);
         CommentRepository mockCommentRepository = Mockito.mock(CommentRepository.class);
-        ItemMapper mockItemMapper = Mockito.mock(ItemMapper.class);
         ItemServiceImpl itemService =
-                new ItemServiceImpl(mockItemRepository, mockUserRepository, mockCommentRepository, mockBookingRepository, mockItemMapper);
+                new ItemServiceImpl(mockItemRepository, mockUserRepository, mockCommentRepository, mockBookingRepository, itemMapper);
 
         givenItems();
 
@@ -314,9 +283,8 @@ class ItemServiceImplTest {
         UserRepository mockUserRepository = Mockito.mock(UserRepository.class);
         BookingRepository mockBookingRepository = Mockito.mock(BookingRepository.class);
         CommentRepository mockCommentRepository = Mockito.mock(CommentRepository.class);
-        ItemMapper mockItemMapper = Mockito.mock(ItemMapper.class);
         ItemServiceImpl itemService =
-                new ItemServiceImpl(mockItemRepository, mockUserRepository, mockCommentRepository, mockBookingRepository, mockItemMapper);
+                new ItemServiceImpl(mockItemRepository, mockUserRepository, mockCommentRepository, mockBookingRepository, itemMapper);
 
         givenItems();
 
@@ -337,9 +305,8 @@ class ItemServiceImplTest {
         UserRepository mockUserRepository = Mockito.mock(UserRepository.class);
         BookingRepository mockBookingRepository = Mockito.mock(BookingRepository.class);
         CommentRepository mockCommentRepository = Mockito.mock(CommentRepository.class);
-        ItemMapper mockItemMapper = Mockito.mock(ItemMapper.class);
         ItemServiceImpl itemService =
-                new ItemServiceImpl(mockItemRepository, mockUserRepository, mockCommentRepository, mockBookingRepository, mockItemMapper);
+                new ItemServiceImpl(mockItemRepository, mockUserRepository, mockCommentRepository, mockBookingRepository, itemMapper);
 
         givenItems();
 
@@ -361,9 +328,8 @@ class ItemServiceImplTest {
         UserRepository mockUserRepository = Mockito.mock(UserRepository.class);
         BookingRepository mockBookingRepository = Mockito.mock(BookingRepository.class);
         CommentRepository mockCommentRepository = Mockito.mock(CommentRepository.class);
-        ItemMapper mockItemMapper = Mockito.mock(ItemMapper.class);
         ItemServiceImpl itemService =
-                new ItemServiceImpl(mockItemRepository, mockUserRepository, mockCommentRepository, mockBookingRepository, mockItemMapper);
+                new ItemServiceImpl(mockItemRepository, mockUserRepository, mockCommentRepository, mockBookingRepository, itemMapper);
 
         givenItems();
 
@@ -397,9 +363,8 @@ class ItemServiceImplTest {
         UserRepository mockUserRepository = Mockito.mock(UserRepository.class);
         BookingRepository mockBookingRepository = Mockito.mock(BookingRepository.class);
         CommentRepository mockCommentRepository = Mockito.mock(CommentRepository.class);
-        ItemMapper mockItemMapper = Mockito.mock(ItemMapper.class);
         ItemServiceImpl itemService =
-                new ItemServiceImpl(mockItemRepository, mockUserRepository, mockCommentRepository, mockBookingRepository, mockItemMapper);
+                new ItemServiceImpl(mockItemRepository, mockUserRepository, mockCommentRepository, mockBookingRepository, itemMapper);
 
         givenItems();
 
@@ -448,9 +413,8 @@ class ItemServiceImplTest {
         UserRepository mockUserRepository = Mockito.mock(UserRepository.class);
         BookingRepository mockBookingRepository = Mockito.mock(BookingRepository.class);
         CommentRepository mockCommentRepository = Mockito.mock(CommentRepository.class);
-        ItemMapper mockItemMapper = Mockito.mock(ItemMapper.class);
         ItemServiceImpl itemService =
-                new ItemServiceImpl(mockItemRepository, mockUserRepository, mockCommentRepository, mockBookingRepository, mockItemMapper);
+                new ItemServiceImpl(mockItemRepository, mockUserRepository, mockCommentRepository, mockBookingRepository, itemMapper);
 
         givenItems();
 

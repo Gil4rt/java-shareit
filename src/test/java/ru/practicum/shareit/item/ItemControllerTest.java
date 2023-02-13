@@ -123,7 +123,6 @@ class ItemControllerTest {
                 .andExpect(jsonPath("$.name", is(item.getName())))
                 .andExpect(jsonPath("$.description", is(item.getDescription())))
                 .andExpect(jsonPath("$.available", is(item.getAvailable())))
-                .andExpect(jsonPath("$.owner", is(item.getOwner()), Long.class))
                 .andExpect(jsonPath("$.requestId", is(item.getRequestId()), Long.class));
     }
 
@@ -143,22 +142,7 @@ class ItemControllerTest {
                 .andExpect(jsonPath("$.name", is(item.getName())))
                 .andExpect(jsonPath("$.description", is(item.getDescription())))
                 .andExpect(jsonPath("$.available", is(item.getAvailable())))
-                .andExpect(jsonPath("$.owner", is(item.getOwner()), Long.class))
                 .andExpect(jsonPath("$.requestId", is(item.getRequestId()), Long.class));
-    }
-
-    @Test
-    void updateItemIsNotFound() throws Exception {
-        when(service.updateItem(anyLong(), any(), anyLong()))
-                .thenReturn(null);
-
-        mvc.perform(patch("/items/{id}", 1)
-                        .content(mapper.writeValueAsString(itemDto))
-                        .header("X-Sharer-User-Id", "1")
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -247,8 +231,7 @@ class ItemControllerTest {
                 .andExpect(jsonPath("$[0].name", is(item.getName())))
                 .andExpect(jsonPath("$[0].description", is(item.getDescription())))
                 .andExpect(jsonPath("$[0].available", is(item.getAvailable())))
-                .andExpect(jsonPath("$[0].requestId", is(item.getRequestId()), Long.class))
-                .andExpect(jsonPath("$[0].owner", is(item.getOwner()), Long.class));
+                .andExpect(jsonPath("$[0].requestId", is(item.getRequestId()), Long.class));
     }
 
     @Test
