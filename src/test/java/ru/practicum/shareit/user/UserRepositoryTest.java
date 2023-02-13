@@ -25,20 +25,20 @@ class UserRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        user.setName("Dima");
-        user.setEmail("dimano@mail.ru");
+        user.setName("Eugene");
+        user.setEmail("jyk@gmail.com");
         em.persist(user);
     }
 
     @Test
     void findByEmailIsPresent() {
-        Optional<User> foundItem = repository.findByEmail("dimano@mail.ru");
+        Optional<User> foundItem = repository.findByEmail("jyk@gmail.com");
         assertThat(foundItem.isPresent());
     }
 
     @Test
     void findByEmailIsEmpty() {
-        Optional<User> foundItem = repository.findByEmail("dimano2@mail.ru");
+        Optional<User> foundItem = repository.findByEmail("Eugeneno2@mail.ru");
         assertThat(foundItem.isEmpty());
     }
 }

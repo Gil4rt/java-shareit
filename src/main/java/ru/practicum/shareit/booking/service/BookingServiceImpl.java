@@ -124,6 +124,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public Collection<BookingFullDto> findUserBookings(long bookerId, String state, int from, int size) {
         log.info("Поиск бронирований от пользователя (id={}) для state = {}", bookerId, state);
+        BookingState.validateState(state);
         User booker = validateUser(bookerId);
         int page = validatePage(from, size);
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "start"));

@@ -10,7 +10,7 @@ public enum BookingState {
     WAITING,
     REJECTED;
 
-    public static BookingState validateState(String value) throws ValidationException  {
+    public static BookingState validateState(String value) throws ValidationException {
         try {
             return BookingState.valueOf(value);
         } catch (RuntimeException exception) {

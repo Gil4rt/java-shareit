@@ -76,7 +76,7 @@ class UserServiceImplTest {
         UserRepository mockRepository = Mockito.mock(UserRepository.class);
         UserServiceImpl userService = new UserServiceImpl(mockRepository, userMapper);
 
-        User saveUser = makeUser("dimano@mail.ru", "Dima");
+        User saveUser = makeUser("jyk@gmail.com", "Eugene");
         saveUser.setId(1L);
 
         Mockito
@@ -96,7 +96,7 @@ class UserServiceImplTest {
         UserRepository mockRepository = Mockito.mock(UserRepository.class);
         UserServiceImpl userService = new UserServiceImpl(mockRepository, userMapper);
 
-        User getUser = makeUser("dimano@mail.ru", "Dima");
+        User getUser = makeUser("jyk@gmail.com", "Eugene");
         getUser.setId(1L);
 
         Mockito
@@ -112,10 +112,10 @@ class UserServiceImplTest {
                 .thenReturn(Optional.of(getUser));
 
         // when
-        UserDto updUser = userService.update(userMapper.toUserDto(makeUser("dimano@yandex.ru", "Dmitriy"))).get();
+        UserDto updUser = userService.update(userMapper.toUserDto(makeUser("Eugeneno@yandex.ru", "Dmitriy"))).get();
 
         // then
-        Assertions.assertEquals("dimano@yandex.ru", updUser.getEmail());
+        Assertions.assertEquals("Eugeneno@yandex.ru", updUser.getEmail());
         Assertions.assertEquals("Dmitriy", updUser.getName());
     }
 
@@ -125,7 +125,7 @@ class UserServiceImplTest {
         UserMapper mockUserMapper = Mockito.mock(UserMapper.class);
         UserServiceImpl userService = new UserServiceImpl(mockRepository, mockUserMapper);
 
-        User getUser = makeUser("dimano@mail.ru", "Dima");
+        User getUser = makeUser("jyk@gmail.com", "Eugene");
         getUser.setId(1L);
 
         Mockito
@@ -141,7 +141,7 @@ class UserServiceImplTest {
         UserMapper mockUserMapper = Mockito.mock(UserMapper.class);
         UserServiceImpl userService = new UserServiceImpl(mockRepository, mockUserMapper);
 
-        User getUser = makeUser("dimano@mail.ru", "Dima");
+        User getUser = makeUser("jyk@gmail.com", "Eugene");
         getUser.setId(1L);
 
         Mockito

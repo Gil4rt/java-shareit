@@ -32,8 +32,8 @@ class ItemRequestRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        user.setName("Dima");
-        user.setEmail("dimano@mail.ru");
+        user.setName("Eugene");
+        user.setEmail("jyk@gmail.com");
         userId = em.persist(user).getId();
 
         itemRequest.setRequestor(userId);

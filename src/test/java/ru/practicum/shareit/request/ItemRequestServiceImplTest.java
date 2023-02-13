@@ -51,7 +51,7 @@ class ItemRequestServiceImplTest {
     @Test
     void findUserItemRequests() {
         // given
-        User user = makeUser("dimano@mail.ru", "Dima");
+        User user = makeUser("jyk@gmail.com", "Eugene");
         em.persist(user);
         em.flush();
 
@@ -91,7 +91,7 @@ class ItemRequestServiceImplTest {
     @Test
     void saveItemRequest() {
         // given
-        User user = makeUser("dimano@mail.ru", "Dima");
+        User user = makeUser("jyk@gmail.com", "Eugene");
         long userId = userService.save(userMapper.toUserDto(user)).getId();
 
         ItemRequestDto itemRequestDto = new ItemRequestDto(1L, "палатка");
@@ -117,7 +117,7 @@ class ItemRequestServiceImplTest {
         ItemRequestServiceImpl itemRequestService =
                 new ItemRequestServiceImpl(mockRepository, mockItemRepository, mockUserRepository);
 
-        User user = makeUser("dimano@mail.ru", "Dima");
+        User user = makeUser("jyk@gmail.com", "Eugene");
         user.setId(1L);
 
         Mockito
@@ -142,7 +142,7 @@ class ItemRequestServiceImplTest {
         ItemRequestServiceImpl itemRequestService =
                 new ItemRequestServiceImpl(mockRepository, mockItemRepository, mockUserRepository);
 
-        User user = makeUser("dimano@mail.ru", "Dima");
+        User user = makeUser("jyk@gmail.com", "Eugene");
         user.setId(1L);
 
         Mockito
@@ -167,7 +167,7 @@ class ItemRequestServiceImplTest {
         ItemRequestServiceImpl itemRequestService =
                 new ItemRequestServiceImpl(mockRepository, mockItemRepository, mockUserRepository);
 
-        User user = makeUser("dimano@mail.ru", "Dima");
+        User user = makeUser("jyk@gmail.com", "Eugene");
         user.setId(1L);
 
         Mockito
@@ -192,7 +192,7 @@ class ItemRequestServiceImplTest {
         ItemRequestServiceImpl itemRequestService =
                 new ItemRequestServiceImpl(mockRepository, mockItemRepository, mockUserRepository);
 
-        User user = makeUser("dimano@mail.ru", "Dima");
+        User user = makeUser("jyk@gmail.com", "Eugene");
         user.setId(1L);
 
         Mockito
@@ -237,7 +237,7 @@ class ItemRequestServiceImplTest {
         ItemRequestServiceImpl itemRequestService =
                 new ItemRequestServiceImpl(mockRepository, mockItemRepository, mockUserRepository);
 
-        User user = makeUser("dimano@mail.ru", "Dima");
+        User user = makeUser("jyk@gmail.com", "Eugene");
         user.setId(1L);
 
         Mockito
@@ -265,7 +265,7 @@ class ItemRequestServiceImplTest {
         ItemRequestServiceImpl itemRequestService =
                 new ItemRequestServiceImpl(mockRepository, mockItemRepository, mockUserRepository);
 
-        User user = makeUser("dimano@mail.ru", "Dima");
+        User user = makeUser("jyk@gmail.com", "Eugene");
         user.setId(1L);
 
         Mockito

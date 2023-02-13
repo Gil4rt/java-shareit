@@ -43,8 +43,8 @@ class BookingRepositoryTest {
 
     @BeforeEach
     void setup() {
-        owner.setName("Dima");
-        owner.setEmail("dimano@mail.ru");
+        owner.setName("Eugene");
+        owner.setEmail("jyk@gmail.com");
         ownerId = em.persist(owner).getId();
 
         item.setName("Дрель");
@@ -54,7 +54,7 @@ class BookingRepositoryTest {
         itemId = em.persist(item).getId();
 
         booker.setName("DN");
-        booker.setEmail("dimano@yandex.ru");
+        booker.setEmail("Eugeneno@yandex.ru");
         bookerId = em.persist(booker).getId();
 
         LocalDateTime lastStart = LocalDateTime.now().minusDays(10);

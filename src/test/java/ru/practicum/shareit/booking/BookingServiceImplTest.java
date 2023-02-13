@@ -51,7 +51,7 @@ class BookingServiceImplTest {
     private LocalDateTime now = LocalDateTime.now();
 
     private void givenUserBookings() {
-        user = makeUser("dimano@mail.ru", "Dima");
+        user = makeUser("jyk@gmail.com", "Eugene");
         em.persist(user);
         em.flush();
 
@@ -125,7 +125,7 @@ class BookingServiceImplTest {
     }
 
     private void givenBookings(int startPlus, int endPlus, boolean available, long ownerId, long bookerId) {
-        user = makeUser("dimano@mail.ru", "Dima");
+        user = makeUser("jyk@gmail.com", "Eugene");
         user.setId(1L);
 
         item = makeItem(ownerId, "удочка", "инструмент для ловли рыбы");

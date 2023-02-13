@@ -59,7 +59,7 @@ class ItemServiceImplTest {
     @Test
     void findUserItems() {
         // given
-        User user = makeUser("dimano@mail.ru", "Dima");
+        User user = makeUser("jyk@gmail.com", "Eugene");
         em.persist(user);
         em.flush();
 
@@ -89,7 +89,7 @@ class ItemServiceImplTest {
     }
 
     private void givenItems() {
-        user = makeUser("dimano@mail.ru", "Dima");
+        user = makeUser("jyk@gmail.com", "Eugene");
         user.setId(1L);
         itemDto = new ItemDto(user.getId(), "удочка", "инструмент для ловли рыбы", null, null);
         item = makeItem(user.getId(), itemDto.getName(), itemDto.getDescription());

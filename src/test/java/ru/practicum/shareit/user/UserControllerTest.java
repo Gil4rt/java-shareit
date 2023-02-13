@@ -40,8 +40,8 @@ class UserControllerTest {
     @BeforeEach
     void setUp() {
         userDto.setId(1L);
-        userDto.setName("Dima");
-        userDto.setEmail("dimano@mail.ru");
+        userDto.setName("Eugene");
+        userDto.setEmail("jyk@gmail.com");
     }
 
     @Test

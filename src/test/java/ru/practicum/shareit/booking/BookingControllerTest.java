@@ -32,8 +32,8 @@ class BookingControllerTest {
     Creator<User> creatorUser = () -> {
         User user = new User();
         user.setId(1L);
-        user.setName("Dima");
-        user.setEmail("dimano@mail.ru");
+        user.setName("Eugene");
+        user.setEmail("jyk@gmail.com");
         return user;
     };
     Creator<Item> creatorItem = () -> {
