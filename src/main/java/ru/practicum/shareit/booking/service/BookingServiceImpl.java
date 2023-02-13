@@ -160,6 +160,7 @@ public class BookingServiceImpl implements BookingService {
     public Collection<BookingFullDto> findOwnerBookings(long ownerId, String state, int from, int size) {
         log.info("Поиск бронирований вещей пользователя (id={}) для state = {}", ownerId, state);
         validateUser(ownerId);
+        BookingState.validateState(state);
         try {
             BookingState bookingState = BookingState.valueOf(state);
         } catch (Exception e) {
