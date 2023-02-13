@@ -48,6 +48,11 @@ class ItemRequestControllerTest {
 
     private Item item = new Item();
 
+    private static final String X_SHARER_USER_ID = "X-Sharer-User-Id";
+
+    private static final String VALUE_HEADER_ONE = "1";
+
+
     @BeforeEach
     void setUp() {
         itemRequest.setId(itemRequestDto.getId());
@@ -73,7 +78,7 @@ class ItemRequestControllerTest {
 
         mvc.perform(post("/requests")
                         .content(mapper.writeValueAsString(itemRequestDto))
-                        .header("X-Sharer-User-Id", "1")
+                        .header(X_SHARER_USER_ID, VALUE_HEADER_ONE)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -90,7 +95,7 @@ class ItemRequestControllerTest {
                 .thenReturn(List.of(itemRequestFullDto));
 
         mvc.perform(get("/requests")
-                        .header("X-Sharer-User-Id", "1")
+                        .header(X_SHARER_USER_ID, VALUE_HEADER_ONE)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -109,7 +114,7 @@ class ItemRequestControllerTest {
                 .thenReturn(List.of(itemRequestFullDto));
 
         mvc.perform(get("/requests/all")
-                        .header("X-Sharer-User-Id", "1")
+                        .header(X_SHARER_USER_ID, VALUE_HEADER_ONE)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -128,7 +133,7 @@ class ItemRequestControllerTest {
                 .thenReturn(Optional.of(itemRequestFullDto));
 
         mvc.perform(get("/requests/{id}", 1)
-                        .header("X-Sharer-User-Id", "1")
+                        .header(X_SHARER_USER_ID, VALUE_HEADER_ONE)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -146,7 +151,7 @@ class ItemRequestControllerTest {
                 .thenReturn(Optional.empty());
 
         mvc.perform(get("/requests/{id}", 1)
-                        .header("X-Sharer-User-Id", "1")
+                        .header(X_SHARER_USER_ID, VALUE_HEADER_ONE)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))

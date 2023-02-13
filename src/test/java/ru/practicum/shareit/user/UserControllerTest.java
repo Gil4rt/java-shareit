@@ -37,6 +37,12 @@ class UserControllerTest {
 
     private UserDto userDto = new UserDto();
 
+    private static final String ID = "$.id";
+
+    private static final String NAME = "$.name";
+
+    private static final String EMAIL = "$.email";
+
     @BeforeEach
     void setUp() {
         userDto.setId(1L);
@@ -55,9 +61,9 @@ class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id", is(userDto.getId()), Long.class))
-                .andExpect(jsonPath("$.name", is(userDto.getName())))
-                .andExpect(jsonPath("$.email", is(userDto.getEmail())));
+                .andExpect(jsonPath(ID, is(userDto.getId()), Long.class))
+                .andExpect(jsonPath(NAME, is(userDto.getName())))
+                .andExpect(jsonPath(EMAIL, is(userDto.getEmail())));
     }
 
     @Test
@@ -87,9 +93,9 @@ class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(userDto.getId()), Long.class))
-                .andExpect(jsonPath("$.name", is(userDto.getName())))
-                .andExpect(jsonPath("$.email", is(userDto.getEmail())));
+                .andExpect(jsonPath(ID, is(userDto.getId()), Long.class))
+                .andExpect(jsonPath(NAME, is(userDto.getName())))
+                .andExpect(jsonPath(EMAIL, is(userDto.getEmail())));
     }
 
     @Test
@@ -115,9 +121,9 @@ class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(userDto.getId()), Long.class))
-                .andExpect(jsonPath("$.name", is(userDto.getName())))
-                .andExpect(jsonPath("$.email", is(userDto.getEmail())));
+                .andExpect(jsonPath(ID, is(userDto.getId()), Long.class))
+                .andExpect(jsonPath(NAME, is(userDto.getName())))
+                .andExpect(jsonPath(EMAIL, is(userDto.getEmail())));
     }
 
     @Test

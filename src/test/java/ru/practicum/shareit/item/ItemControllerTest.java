@@ -52,6 +52,16 @@ class ItemControllerTest {
     private ItemFullDto itemFullDto = new ItemFullDto();
     private Booking booking = new Booking();
 
+    private static final String X_SHARER_USER_ID = "X-Sharer-User-Id";
+
+    private static final String VALUE_HEADER_ONE = "1";
+
+    private static final String ID = "$.id";
+    private static final String NAME = "$.name";
+    private static final String DESCRIPTION = "$.description";
+    private static final String AVAILABLE = "$.available";
+    private static final String REQUEST_ID = "$.requestId";
+
     @BeforeEach
     void setUp() {
         item.setId(itemDto.getId());
@@ -83,7 +93,7 @@ class ItemControllerTest {
                 .thenReturn(List.of(itemFullDto));
 
         mvc.perform(get("/items")
-                        .header("X-Sharer-User-Id", "1")
+                        .header(X_SHARER_USER_ID, VALUE_HEADER_ONE)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -114,16 +124,16 @@ class ItemControllerTest {
 
         mvc.perform(post("/items")
                         .content(mapper.writeValueAsString(itemDto))
-                        .header("X-Sharer-User-Id", "1")
+                        .header(X_SHARER_USER_ID, VALUE_HEADER_ONE)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id", is(item.getId()), Long.class))
-                .andExpect(jsonPath("$.name", is(item.getName())))
-                .andExpect(jsonPath("$.description", is(item.getDescription())))
-                .andExpect(jsonPath("$.available", is(item.getAvailable())))
-                .andExpect(jsonPath("$.requestId", is(item.getRequestId()), Long.class));
+                .andExpect(jsonPath(ID, is(item.getId()), Long.class))
+                .andExpect(jsonPath(NAME, is(item.getName())))
+                .andExpect(jsonPath(DESCRIPTION, is(item.getDescription())))
+                .andExpect(jsonPath(AVAILABLE, is(item.getAvailable())))
+                .andExpect(jsonPath(REQUEST_ID, is(item.getRequestId()), Long.class));
     }
 
     @Test
@@ -133,15 +143,15 @@ class ItemControllerTest {
 
         mvc.perform(patch("/items/{id}", 1)
                         .content(mapper.writeValueAsString(itemDto))
-                        .header("X-Sharer-User-Id", "1")
+                        .header(X_SHARER_USER_ID, VALUE_HEADER_ONE)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(item.getId()), Long.class))
-                .andExpect(jsonPath("$.name", is(item.getName())))
-                .andExpect(jsonPath("$.description", is(item.getDescription())))
-                .andExpect(jsonPath("$.available", is(item.getAvailable())))
+                .andExpect(jsonPath(ID, is(item.getId()), Long.class))
+                .andExpect(jsonPath(NAME, is(item.getName())))
+                .andExpect(jsonPath(DESCRIPTION, is(item.getDescription())))
+                .andExpect(jsonPath(AVAILABLE, is(item.getAvailable())))
                 .andExpect(jsonPath("$.requestId", is(item.getRequestId()), Long.class));
     }
 
@@ -151,16 +161,16 @@ class ItemControllerTest {
                 .thenReturn(Optional.of(itemFullDto));
 
         mvc.perform(get("/items/{id}", 1)
-                        .header("X-Sharer-User-Id", "1")
+                        .header(X_SHARER_USER_ID, VALUE_HEADER_ONE)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(item.getId()), Long.class))
-                .andExpect(jsonPath("$.name", is(item.getName())))
-                .andExpect(jsonPath("$.description", is(item.getDescription())))
-                .andExpect(jsonPath("$.available", is(item.getAvailable())))
-                .andExpect(jsonPath("$.requestId", is(item.getRequestId()), Long.class))
+                .andExpect(jsonPath(ID, is(item.getId()), Long.class))
+                .andExpect(jsonPath(NAME, is(item.getName())))
+                .andExpect(jsonPath(DESCRIPTION, is(item.getDescription())))
+                .andExpect(jsonPath(AVAILABLE, is(item.getAvailable())))
+                .andExpect(jsonPath(REQUEST_ID, is(item.getRequestId()), Long.class))
                 .andExpect(jsonPath("$.lastBooking.id", is(itemFullDto.getLastBooking().getId()), Long.class))
                 .andExpect(jsonPath("$.lastBooking.itemId", is(itemFullDto.getLastBooking().getItemId()), Long.class))
                 .andExpect(jsonPath("$.lastBooking.bookerId", is(itemFullDto.getLastBooking().getBookerId()), Long.class))
@@ -180,7 +190,7 @@ class ItemControllerTest {
                 .thenReturn(Optional.empty());
 
         mvc.perform(get("/items/{id}", 1)
-                        .header("X-Sharer-User-Id", "1")
+                        .header(X_SHARER_USER_ID, VALUE_HEADER_ONE)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -193,7 +203,7 @@ class ItemControllerTest {
                 .thenReturn(true);
 
         mvc.perform(delete("/items/{id}", 1)
-                        .header("X-Sharer-User-Id", "1")
+                        .header(X_SHARER_USER_ID, VALUE_HEADER_ONE)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -207,7 +217,7 @@ class ItemControllerTest {
 
         mvc.perform(delete("/items/{id}", 1)
                         .content(mapper.writeValueAsString(itemDto))
-                        .header("X-Sharer-User-Id", "1")
+                        .header(X_SHARER_USER_ID, VALUE_HEADER_ONE)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -220,7 +230,7 @@ class ItemControllerTest {
                 .thenReturn(List.of(itemDto));
 
         mvc.perform(get("/items/search")
-                        .header("X-Sharer-User-Id", "1")
+                        .header(X_SHARER_USER_ID, VALUE_HEADER_ONE)
                         .param("text", "дрель")
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -241,12 +251,12 @@ class ItemControllerTest {
 
         mvc.perform(post("/items/{id}/comment", 1)
                         .content(mapper.writeValueAsString(commentDto))
-                        .header("X-Sharer-User-Id", "1")
+                        .header(X_SHARER_USER_ID, VALUE_HEADER_ONE)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(commentDto.getId()), Long.class))
+                .andExpect(jsonPath(ID, is(commentDto.getId()), Long.class))
                 .andExpect(jsonPath("$.text", is(commentDto.getText())))
                 .andExpect(jsonPath("$.authorName", is(commentDto.getAuthorName())))
                 .andExpect(jsonPath("$.created", is(commentDto.getCreated().toString())));
@@ -259,7 +269,7 @@ class ItemControllerTest {
 
         mvc.perform(post("/items/{id}/comment", 1)
                         .content(mapper.writeValueAsString(commentDto))
-                        .header("X-Sharer-User-Id", "1")
+                        .header(X_SHARER_USER_ID, VALUE_HEADER_ONE)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
