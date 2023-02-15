@@ -18,34 +18,36 @@ import java.util.Collection;
 public class ItemController {
     private final ItemService itemService;
 
+    private static final String X_SHARER_USER_ID = "X-Sharer-User-Id";
+
     @GetMapping
-    public Collection<ItemFullDto> findItemItems(@RequestHeader("X-Sharer-User-Id") long userId) {
+    public Collection<ItemFullDto> findItemItems(@RequestHeader(X_SHARER_USER_ID) long userId) {
         return itemService.findUserItems(userId);
     }
 
     @PostMapping
     public ResponseEntity<ItemDto> createItem(@Valid @RequestBody ItemDto itemDto,
-                                              @RequestHeader("X-Sharer-User-Id") long userId) {
+                                              @RequestHeader(X_SHARER_USER_ID) long userId) {
         return new ResponseEntity<>(itemService.saveItem(itemDto, userId), HttpStatus.CREATED);
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<ItemDto> updateItem(@PathVariable long id,
                                               @RequestBody ItemDto itemDto,
-                                              @RequestHeader("X-Sharer-User-Id") long userId) {
+                                              @RequestHeader(X_SHARER_USER_ID) long userId) {
         return new ResponseEntity<>(itemService.updateItem(id, itemDto, userId), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ItemFullDto> findItemById(@PathVariable long id,
-                                                    @RequestHeader("X-Sharer-User-Id") long userId) {
+                                                    @RequestHeader(X_SHARER_USER_ID) long userId) {
         return itemService.getItem(id, userId).map(item -> new ResponseEntity<>(item, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ItemDto> deleteItemById(@PathVariable long id,
-                                                  @RequestHeader("X-Sharer-User-Id") long userId) {
+                                                  @RequestHeader(X_SHARER_USER_ID) long userId) {
         return itemService.deleteItem(id, userId) ? new ResponseEntity<>(HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
@@ -58,7 +60,7 @@ public class ItemController {
     @PostMapping("/{id}/comment")
     public ResponseEntity<CommentDto> addItemComment(@PathVariable long id,
                                                      @Valid @RequestBody CommentDto commentDto,
-                                                     @RequestHeader("X-Sharer-User-Id") long userId) {
+                                                     @RequestHeader(X_SHARER_USER_ID) long userId) {
         return itemService.addItemComment(id, userId, commentDto).map(comment -> new ResponseEntity<>(comment, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }

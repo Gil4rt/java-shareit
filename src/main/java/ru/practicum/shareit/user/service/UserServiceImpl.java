@@ -44,9 +44,9 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public Optional<UserDto> update(Long userId, UserDto userDto) {
-        User user = repository.findById(userId)
-                .orElseThrow(() -> new NotFoundException(String.format("User ID %s is already exist.", userId)));
+    public Optional<UserDto> update(UserDto userDto) {
+        User user = repository.findById(userDto.getId())
+                .orElseThrow(() -> new NotFoundException(String.format("User ID %s is already exist.", userDto)));
         if (userDto.getName() != null && !userDto.getName().isBlank()) {
             user.setName(userDto.getName());
         }

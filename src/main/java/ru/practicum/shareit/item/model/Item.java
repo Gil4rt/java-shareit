@@ -1,7 +1,9 @@
 package ru.practicum.shareit.item.model;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 
@@ -9,18 +11,19 @@ import javax.persistence.*;
 @Setter
 @Entity
 @Table(name = "items", schema = "public")
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    long id;
     @Column
-    private String name;
+    String name;
     @Column
-    private String description;
+    String description;
     @Column(name = "is_available")
-    private Boolean available;
+    Boolean available;
     @Column(name = "owner_id")
-    private Long owner;
+    Long owner;
     @Column(name = "request_id")
-    private Long itemRequest;
+    Long requestId;
 }

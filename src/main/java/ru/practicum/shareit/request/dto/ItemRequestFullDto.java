@@ -1,19 +1,20 @@
 package ru.practicum.shareit.request.dto;
 
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import ru.practicum.shareit.item.model.Item;
 
-import javax.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
+import java.util.Collection;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ItemRequestDto {
-    long id;
-    @NotBlank(message = "Description is required")
+public class ItemRequestFullDto {
+    Long id;
     String description;
+    LocalDateTime created;
+    Collection<Item> items;
 }

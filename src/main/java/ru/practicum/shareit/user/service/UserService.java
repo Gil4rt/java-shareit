@@ -12,7 +12,7 @@ public interface UserService {
 
     UserDto save(UserDto userDto);
 
-    Optional<UserDto> update(Long userId, UserDto userDto);
+    Optional<UserDto> update(UserDto userDto);
 
     boolean delete(long userId);
 
