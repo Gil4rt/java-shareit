@@ -31,27 +31,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(ItemRequestController.class)
 class ItemRequestControllerTest {
 
+    private static final String X_SHARER_USER_ID = "X-Sharer-User-Id";
+    private static final String VALUE_HEADER_ONE = "1";
     @MockBean
     private ItemRequestService service;
-
     @Autowired
     private ObjectMapper mapper;
-
     @Autowired
     private MockMvc mvc;
-
     private ItemRequestDto itemRequestDto = new ItemRequestDto(1L, "Нужна 4-местная байдарка");
-
     private ItemRequest itemRequest = new ItemRequest();
-
     private ItemRequestFullDto itemRequestFullDto = new ItemRequestFullDto();
-
     private Item item = new Item();
-
-    private static final String X_SHARER_USER_ID = "X-Sharer-User-Id";
-
-    private static final String VALUE_HEADER_ONE = "1";
-
 
     @BeforeEach
     void setUp() {

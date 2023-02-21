@@ -29,6 +29,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(BookingController.class)
 class BookingControllerTest {
+    private static final String X_SHARER_USER_ID = "X-Sharer-User-Id";
+    private static final String VALUE_HEADER_ONE = "1";
+    private static final String ID = "$.id";
+    private static final String START = "$.start";
+    private static final String END = "$.end";
+    private static final String STATUS = "$.status";
+    private static final String BOOKER_ID = "$.booker.id";
+    private static final String BOOKER_NAME = "$.booker.name";
+    private static final String ITEM_ID = "$.item.id";
+    private static final String ITEM_NAME = "$.item.name";
     Creator<User> creatorUser = () -> {
         User user = new User();
         user.setId(1L);
@@ -54,22 +64,7 @@ class BookingControllerTest {
     private LocalDateTime end = start.plusDays(7);
     private BookingDto bookingDto = new BookingDto(1L, start, end);
     private User user = creatorUser.create();
-
     private Item item = creatorItem.create();
-
-    private static final String X_SHARER_USER_ID = "X-Sharer-User-Id";
-
-    private static final String VALUE_HEADER_ONE = "1";
-
-    private static final String ID = "$.id";
-    private static final String START = "$.start";
-    private static final String END = "$.end";
-    private static final String STATUS = "$.status";
-    private static final String BOOKER_ID = "$.booker.id";
-    private static final String BOOKER_NAME = "$.booker.name";
-    private static final String ITEM_ID = "$.item.id";
-    private static final String ITEM_NAME = "$.item.name";
-
     private BookingFullDto bookingFullDto = new BookingFullDto(
             4L, start, end, BookingStatus.WAITING, user, item);
 

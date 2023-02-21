@@ -4,10 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingFullDto;
 import ru.practicum.shareit.booking.model.BookingState;
 import ru.practicum.shareit.booking.service.BookingService;
-import ru.practicum.shareit.booking.dto.BookingDto;
 
 import javax.validation.Valid;
 import java.util.Collection;
@@ -17,8 +17,8 @@ import java.util.Collection;
 @RequiredArgsConstructor
 @RequestMapping(path = "/bookings")
 public class BookingController {
-    private final BookingService service;
     private static final String X_SHARER_USER_ID = "X-Sharer-User-Id";
+    private final BookingService service;
 
     @PostMapping
     public ResponseEntity<BookingFullDto> createBooking(@Valid @RequestBody BookingDto bookingDto,

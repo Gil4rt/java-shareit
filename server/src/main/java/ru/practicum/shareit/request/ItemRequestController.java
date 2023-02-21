@@ -16,9 +16,8 @@ import java.util.Collection;
 @RequiredArgsConstructor
 @RequestMapping(path = "/requests")
 public class ItemRequestController {
-    private final ItemRequestService service;
-
     private static final String X_SHARER_USER_ID = "X-Sharer-User-Id";
+    private final ItemRequestService service;
 
     @PostMapping
     public ResponseEntity<ItemRequest> createItemRequest(@Valid @RequestBody ItemRequestDto itemRequestDto,

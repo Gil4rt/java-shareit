@@ -32,35 +32,27 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(ItemController.class)
 class ItemControllerTest {
 
+    private static final String X_SHARER_USER_ID = "X-Sharer-User-Id";
+    private static final String VALUE_HEADER_ONE = "1";
+    private static final String ID = "$.id";
+    private static final String NAME = "$.name";
+    private static final String DESCRIPTION = "$.description";
+    private static final String AVAILABLE = "$.available";
+    private static final String REQUEST_ID = "$.requestId";
     @MockBean
     private ItemService service;
-
     @Autowired
     private ObjectMapper mapper;
-
     @Autowired
     private MockMvc mvc;
-
     private LocalDateTime start = LocalDateTime.of(2022, 10, 1, 12, 0, 1);
-
     private LocalDateTime end = start.plusDays(7);
-
     private LocalDateTime commentCreated = end.plusDays(1);
     private CommentDto commentDto = new CommentDto(1L, "Не хватает ударной функции", "Eugene", commentCreated);
     private ItemDto itemDto = new ItemDto(1L, "Дрель", "Инструмент для сверления", true, 2L);
     private Item item = new Item();
     private ItemFullDto itemFullDto = new ItemFullDto();
     private Booking booking = new Booking();
-
-    private static final String X_SHARER_USER_ID = "X-Sharer-User-Id";
-
-    private static final String VALUE_HEADER_ONE = "1";
-
-    private static final String ID = "$.id";
-    private static final String NAME = "$.name";
-    private static final String DESCRIPTION = "$.description";
-    private static final String AVAILABLE = "$.available";
-    private static final String REQUEST_ID = "$.requestId";
 
     @BeforeEach
     void setUp() {

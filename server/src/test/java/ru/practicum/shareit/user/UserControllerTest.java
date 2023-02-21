@@ -26,22 +26,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(UserController.class)
 class UserControllerTest {
+    private static final String ID = "$.id";
+    private static final String NAME = "$.name";
+    private static final String EMAIL = "$.email";
     @MockBean
     private UserService service;
-
     @Autowired
     private MockMvc mvc;
-
     @Autowired
     private ObjectMapper mapper;
-
     private UserDto userDto = new UserDto();
-
-    private static final String ID = "$.id";
-
-    private static final String NAME = "$.name";
-
-    private static final String EMAIL = "$.email";
 
     @BeforeEach
     void setUp() {
