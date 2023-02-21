@@ -21,9 +21,8 @@ import java.time.LocalDateTime;
 @Slf4j
 @Validated
 public class BookingController {
-    private final BookingClient bookingClient;
-
     private static final String X_SHARER_USER_ID = "X-Sharer-User-Id";
+    private final BookingClient bookingClient;
 
     @GetMapping
     public ResponseEntity<Object> getBookings(
