@@ -94,7 +94,7 @@ public class ItemServiceImpl implements ItemService {
     public Optional<ItemFullDto> getItem(long id, long userId) {
         Optional<Item> item = repository.findById(id);
         if (item.isPresent()) {
-            return Optional.of(ItemMapper.toItemFullDto(item.get(),
+            return Optional.of(itemMapper.toItemFullDto(item.get(),
                     bookingRepository.findLastBooking(id, userId, LocalDateTime.now()),
                     bookingRepository.findNextBooking(id, userId, LocalDateTime.now()),
                     commentRepository.findAllByItemIdOrderByCreatedDesc(id)

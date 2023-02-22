@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 @Component
 public class ItemMapper {
-    public static ItemFullDto toItemFullDto(Item item,
+    public ItemFullDto toItemFullDto(Item item,
                                             Optional<Booking> lastBooking,
                                             Optional<Booking> nextBooking,
                                             Collection<CommentDto> comments) {
@@ -24,6 +24,7 @@ public class ItemMapper {
             itemFullDto.setName(item.getName());
             itemFullDto.setDescription(item.getDescription());
             itemFullDto.setAvailable(item.getAvailable());
+            itemFullDto.setRequestId(item.getRequestId());
             if (lastBooking.isPresent()) {
                 itemFullDto.setLastBooking(lastBooking.get());
             }
