@@ -15,9 +15,9 @@ import java.util.stream.Collectors;
 @Component
 public class ItemMapper {
     public ItemFullDto toItemFullDto(Item item,
-                                            Optional<Booking> lastBooking,
-                                            Optional<Booking> nextBooking,
-                                            Collection<CommentDto> comments) {
+                                     Optional<Booking> lastBooking,
+                                     Optional<Booking> nextBooking,
+                                     Collection<CommentDto> comments) {
         ItemFullDto itemFullDto = new ItemFullDto();
         if (item != null) {
             itemFullDto.setId(item.getId());
