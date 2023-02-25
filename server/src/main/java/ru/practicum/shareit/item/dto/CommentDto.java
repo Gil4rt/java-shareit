@@ -1,15 +1,22 @@
 package ru.practicum.shareit.item.dto;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class CommentDto {
-    private Long id; // уникальный идентификатор комментария;
-    private String text; // содержимое комментария;
-    private String authorName; // автор комментария;
-    private LocalDateTime created; // дата создания комментария;
+    Long id;
+    @NotBlank(message = "Text is required")
+    String text;
+    String authorName;
+    LocalDateTime created;
 }
