@@ -139,8 +139,9 @@ public class ItemServiceImpl implements ItemService {
         }
         return item;
     }
-
-    private boolean validateBookingItem(long itemId, long userId) {
+    @Transactional
+    @Override
+    public boolean validateBookingItem(long itemId, long userId) {
         Optional<Booking> booking = bookingRepository.findByItemIdAndBookerIdAndStatusAndEndBefore(
                 itemId, userId, BookingStatus.APPROVED, LocalDateTime.now());
         if (booking.isPresent()) {
