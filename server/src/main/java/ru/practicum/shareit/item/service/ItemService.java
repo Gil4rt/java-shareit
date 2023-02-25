@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ItemService {
-    List<ItemFullDto> findUserItems(long userId);
+    Collection<ItemFullDto> findUserItems(long userId);
 
     ItemDto saveItem(ItemDto itemDto, long userId);
 

@@ -41,8 +41,8 @@ public class ItemServiceImpl implements ItemService {
     private final ItemMapper itemMapper;
 
     @Override
-    public List<ItemFullDto> findUserItems(long userId) {
-        return repository.findByOwner(userId)
+    public Collection<ItemFullDto> findUserItems(long userId) {
+        return repository.findByOwnerOrderById(userId)
                 .stream()
                 .map(item -> itemMapper.toItemFullDto(item,
                         bookingRepository.findLastBooking(item.getId(), userId, LocalDateTime.now()),
@@ -53,6 +53,7 @@ public class ItemServiceImpl implements ItemService {
                                 .collect(Collectors.toList())))
                 .collect(Collectors.toList());
     }
+
 
 
     @Transactional
