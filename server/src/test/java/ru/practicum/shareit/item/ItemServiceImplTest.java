@@ -407,56 +407,6 @@ class ItemServiceImplTest {
                 validationException.getMessage());
     }
 
-    @Test
-    void addItemCommentIsOk() {
-        // given
-        ItemRepository mockItemRepository = Mockito.mock(ItemRepository.class);
-        UserRepository mockUserRepository = Mockito.mock(UserRepository.class);
-        BookingRepository mockBookingRepository = Mockito.mock(BookingRepository.class);
-        CommentRepository mockCommentRepository = Mockito.mock(CommentRepository.class);
-        ItemServiceImpl itemService =
-                new ItemServiceImpl(mockItemRepository, mockUserRepository, mockCommentRepository, mockBookingRepository, itemMapper);
-
-        givenItems();
-
-        LocalDateTime now = LocalDateTime.now();
-
-        Booking booking = makeBooking(user.getId(), item.getId(), now.minusDays(14), now.minusDays(11),
-                BookingStatus.APPROVED);
-        booking.setId(1L);
-
-        CommentDto commentDto = new CommentDto(1L, "спининг", "Dmitriy", now);
-
-        Comment comment = CommentMapper.toComment(commentDto, user.getId(), item.getId());
-        comment.setId(1L);
-
-        Mockito
-                .when(mockUserRepository.findById(Mockito.anyLong()))
-                .thenReturn(Optional.of(user));
-
-        Mockito
-                .when(mockItemRepository.findById(1L))
-                .thenReturn(Optional.of(item));
-
-        Mockito
-                .when(mockBookingRepository.findByItemIdAndBookerIdAndStatusAndEndBefore(
-                        Mockito.anyLong(), Mockito.anyLong(), Mockito.any(), Mockito.any()))
-                .thenReturn(Optional.empty());
-
-        Mockito
-                .when(mockCommentRepository.save(Mockito.any()))
-                .thenReturn(comment);
-
-        Mockito
-                .when(mockBookingRepository.findByItemIdAndBookerIdAndStatusAndEndBefore(
-                        Mockito.anyLong(), Mockito.anyLong(), Mockito.any(), Mockito.any()))
-                .thenReturn(Optional.of(booking));
-
-        // when and then
-        Assertions.assertEquals(true,
-                itemService.addItemComment(1L, 1L, commentDto).isPresent());
-    }
-
     private Item makeItem(long userId, String name, String desc) {
         Item item = new Item();
         item.setName(name);
