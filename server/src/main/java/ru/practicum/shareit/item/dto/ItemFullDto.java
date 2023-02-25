@@ -1,23 +1,18 @@
 package ru.practicum.shareit.item.dto;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.FieldDefaults;
+import lombok.Data;
 import ru.practicum.shareit.booking.model.Booking;
 
 import java.util.Collection;
 
-@Getter
-@Setter
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@Data
 public class ItemFullDto {
-    long id;
-    String name;
-    String description;
-    Boolean available;
-    Booking lastBooking;
-    Booking nextBooking;
-    Collection<CommentDto> comments;
-    Long requestId;
+    private long id; // уникальный идентификатор вещи;
+    private String name; // краткое название;
+    private String description; // развёрнутое описание;
+    private Boolean available; // статус о том, доступна или нет вещь для аренды;
+    private Long requestId; // если вещь была создана по запросу другого пользователя;
+    private Booking lastBooking; // последнее бронирование
+    private Booking nextBooking; // ближайшее следующее бронирование
+    private Collection<CommentDto> comments; // отзывы о вещи
 }

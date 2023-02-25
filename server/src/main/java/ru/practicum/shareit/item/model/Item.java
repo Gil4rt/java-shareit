@@ -1,29 +1,24 @@
 package ru.practicum.shareit.item.model;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.FieldDefaults;
+import lombok.Data;
 
 import javax.persistence.*;
 
-@Getter
-@Setter
 @Entity
 @Table(name = "items", schema = "public")
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@Data
 public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long id;
+    private long id; // уникальный идентификатор вещи;
     @Column
-    String name;
+    private String name; // краткое название;
     @Column
-    String description;
+    private String description; // развёрнутое описание;
     @Column(name = "is_available")
-    Boolean available;
+    private Boolean available; // статус о том, доступна или нет вещь для аренды;
     @Column(name = "owner_id")
-    Long owner;
+    private Long owner; // владелец вещи;
     @Column(name = "request_id")
-    Long requestId;
+    private Long requestId; // если вещь была создана по запросу другого пользователя;
 }

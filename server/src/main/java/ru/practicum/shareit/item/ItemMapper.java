@@ -1,6 +1,5 @@
 package ru.practicum.shareit.item;
 
-import org.springframework.stereotype.Component;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
@@ -10,14 +9,41 @@ import ru.practicum.shareit.item.model.Item;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-@Component
 public class ItemMapper {
-    public ItemFullDto toItemFullDto(Item item,
-                                     Optional<Booking> lastBooking,
-                                     Optional<Booking> nextBooking,
-                                     Collection<CommentDto> comments) {
+    public static ItemDto toItemDto(Item item) {
+        return new ItemDto(
+                item.getId(),
+                item.getName(),
+                item.getDescription(),
+                item.getAvailable(),
+                item.getRequestId()
+        );
+    }
+
+    public static Item toItem(ItemDto itemDto, Long ownerId) {
+        Item item = new Item();
+        item.setId(itemDto.getId());
+        item.setName(itemDto.getName());
+        item.setDescription(itemDto.getDescription());
+        item.setAvailable(itemDto.getAvailable());
+        item.setOwner(ownerId);
+        item.setRequestId(itemDto.getRequestId());
+        return item;
+    }
+
+    public static Item toItem(ItemDto itemDto, Item itemOld) {
+        Item item = itemOld;
+        item.setName(itemDto.getName() == null ? itemOld.getName() : itemDto.getName());
+        item.setDescription(itemDto.getDescription() == null ? itemOld.getDescription() : itemDto.getDescription());
+        item.setAvailable(itemDto.getAvailable() == null ? itemOld.getAvailable() : itemDto.getAvailable());
+        return item;
+    }
+
+    public static ItemFullDto toItemFullDto(Item item,
+                                            Optional<Booking> lastBooking,
+                                            Optional<Booking> nextBooking,
+                                            Collection<CommentDto> comments) {
         ItemFullDto itemFullDto = new ItemFullDto();
         if (item != null) {
             itemFullDto.setId(item.getId());
@@ -38,40 +64,5 @@ public class ItemMapper {
             }
         }
         return itemFullDto;
-    }
-
-    public ItemDto toItemDto(Item item) {
-        return new ItemDto(
-                item.getId(),
-                item.getName(),
-                item.getDescription(),
-                item.getAvailable(),
-                item.getRequestId()
-        );
-    }
-
-    public Item toItem(ItemDto itemDto, Long ownerId) {
-        Item item = new Item();
-        item.setId(itemDto.getId());
-        item.setName(itemDto.getName());
-        item.setDescription(itemDto.getDescription());
-        item.setAvailable(itemDto.getAvailable());
-        item.setOwner(ownerId);
-        item.setRequestId(itemDto.getRequestId());
-        return item;
-    }
-
-    public Item toItem(ItemDto itemDto, Item itemOld) {
-        Item item = itemOld;
-        item.setName(itemDto.getName() == null ? itemOld.getName() : itemDto.getName());
-        item.setDescription(itemDto.getDescription() == null ? itemOld.getDescription() : itemDto.getDescription());
-        item.setAvailable(itemDto.getAvailable() == null ? itemOld.getAvailable() : itemDto.getAvailable());
-        return item;
-    }
-
-    public Collection<ItemDto> toItemDtoCollection(Collection<Item> items) {
-        return items.stream()
-                .map(this::toItemDto)
-                .collect(Collectors.toList());
     }
 }
