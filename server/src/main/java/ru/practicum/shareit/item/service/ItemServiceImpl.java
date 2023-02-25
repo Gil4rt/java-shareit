@@ -116,7 +116,8 @@ public class ItemServiceImpl implements ItemService {
 
         if (bookingRepository.findAllByBookerIdAndItemIdAndStatusEqualsAndEndIsBefore(userId, itemId, APPROVED,
                 LocalDateTime.now()).isEmpty()) {
-            throw new ValidationException("Невозможно добавить комментарий.");
+            throw new ValidationException(String.format(
+                    "Пользователь (id = %s) не брал вещь (id = %s) в аренду", userId, itemId));
         }
 
         Comment comment = commentRepository.save(CommentMapper.toComment(commentDto, itemId, userId));
