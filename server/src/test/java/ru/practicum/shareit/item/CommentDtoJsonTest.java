@@ -22,7 +22,7 @@ class CommentDtoJsonTest {
         CommentDto commentDto = new CommentDto(
                 1L,
                 "надувная лодка",
-                "Eugene",
+                "Dima",
                 LocalDateTime.of(2022, 10, 4, 19, 15, 15));
 
         JsonContent<CommentDto> result = json.write(commentDto);

@@ -28,8 +28,8 @@ class ItemRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        user.setName("Eugene");
-        user.setEmail("jyk@gmail.com");
+        user.setName("Dima");
+        user.setEmail("dimano@mail.ru");
 
         item.setName("Дрель");
         item.setDescription("Инструмент для сверления");
