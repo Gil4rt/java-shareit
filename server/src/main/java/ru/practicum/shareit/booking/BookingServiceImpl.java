@@ -1,25 +1,19 @@
-package ru.practicum.shareit.booking.service;
+package ru.practicum.shareit.booking;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.shareit.booking.BookingMapper;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingFullDto;
-import ru.practicum.shareit.booking.model.Booking;
-import ru.practicum.shareit.booking.model.BookingState;
-import ru.practicum.shareit.booking.model.BookingStatus;
-import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
+import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.item.repository.ItemRepository;
-import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.user.repository.UserRepository;
+import ru.practicum.shareit.user.User;
+import ru.practicum.shareit.user.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -46,15 +40,19 @@ public class BookingServiceImpl implements BookingService {
     private Item validateItem(BookingDto bookingDto, Long bookerId) {
         Optional<Item> item = itemRepository.findById(bookingDto.getItemId());
         if (!item.isPresent()) {
-            throw new NotFoundException(String.format("Вещь (id = %s) не найдена", bookingDto.getItemId()));
+            throw new NotFoundException(String.format(
+                    "Вещь (id = %s) не найдена", bookingDto.getItemId()));
         } else if (!item.get().getAvailable()) {
-            throw new ValidationException(String.format("Вещь (id = %s) не доступна", bookingDto.getItemId()));
+            throw new ValidationException(String.format(
+                    "Вещь (id = %s) не доступна", bookingDto.getItemId()));
         } else if (bookerId != null && item.get().getOwner().equals(bookerId)) {
-            throw new NotFoundException(String.format("Нельзя забронировать вещь (id = %s), являясь её владельцем",
-                    bookingDto.getItemId()));
+            throw new NotFoundException(String.format(
+                    "Нельзя забронировать вещь (id = %s), являясь её владельцем", bookingDto.getItemId()));
         } else if (repository.findByItemIdAndStatusAndStartBeforeAndEndAfter(
-                bookingDto.getItemId(), BookingStatus.APPROVED, bookingDto.getEnd(), bookingDto.getStart()).size() > 0) {
-            throw new ValidationException(String.format("Вещь (id = %s) уже забронирована на эти даты", bookingDto.getItemId()));
+                bookingDto.getItemId(), BookingStatus.APPROVED, bookingDto.getEnd(),
+                bookingDto.getStart()).size() > 0) {
+            throw new ValidationException(String.format(
+                    "Вещь (id = %s) уже забронирована на эти даты", bookingDto.getItemId()));
         }
         return item.get();
     }
@@ -67,7 +65,8 @@ public class BookingServiceImpl implements BookingService {
             Item item = itemRepository.findById(booking.get().getItemId()).get();
             if (bookerId == null && !item.getOwner().equals(ownerId)) {
                 throw new NotFoundException(String.format(
-                        "Пользователь (id = %s) не является владельцем вещи (id = %s)", ownerId, booking.get().getItemId()));
+                        "Пользователь (id = %s) не является владельцем вещи (id = %s)",
+                        ownerId, booking.get().getItemId()));
             } else if (ownerId == null && !booking.get().getBookerId().equals(bookerId)) {
                 throw new NotFoundException(String.format(
                         "Пользователь (id = %s) не является автором бронирования вещи (id = %s)",
@@ -76,32 +75,22 @@ public class BookingServiceImpl implements BookingService {
                     && !booking.get().getBookerId().equals(bookerId)
                     && !item.getOwner().equals(ownerId)) {
                 throw new NotFoundException(String.format(
-                        "Пользователь (id = %s) не является ни автором бронирования, ни владельцем вещи (id = %s)",
+                        "Пользователь (id = %s) не является ни автором бронирования, " +
+                                "ни владельцем вещи (id = %s)",
                         bookerId, booking.get().getItemId()));
             }
         }
         return booking.get();
     }
 
-    private void validateBooking(BookingDto bookingDto) {
-        if (bookingDto.getStart().isBefore(LocalDateTime.now())) {
-            throw new ValidationException(String.format("Дата начала брони (%s) находится в прошлом", bookingDto.getStart()));
-        } else if (bookingDto.getEnd().isBefore(LocalDateTime.now())) {
-            throw new ValidationException(String.format("Дата окончания брони (%s) находится в прошлом", bookingDto.getEnd()));
-        } else if (bookingDto.getEnd().isBefore(bookingDto.getStart())) {
-            throw new ValidationException(String.format("Дата окончания брони (%s) раньше даты начала (%s)",
-                    bookingDto.getEnd(), bookingDto.getStart()));
-        }
-    }
-
     @Transactional
     @Override
     public BookingFullDto saveBooking(BookingDto bookingDto, Long bookerId) {
         log.info("Заявка на бронирование {} от пользователя (id={})", bookingDto.toString(), bookerId);
-        validateBooking(bookingDto);
         User booker = validateUser(bookerId);
         Item item = validateItem(bookingDto, bookerId);
-        Booking booking = repository.save(BookingMapper.toBooking(bookingDto, bookerId, BookingStatus.WAITING));
+        Booking booking = repository.save(
+                BookingMapper.toBooking(bookingDto, bookerId, BookingStatus.WAITING));
         return BookingMapper.toBookingFullDto(booking, booker, item);
     }
 
@@ -113,7 +102,8 @@ public class BookingServiceImpl implements BookingService {
         validateUser(ownerId);
         Booking booking = validateBooking(id, ownerId, null);
         if (booking.getStatus() != BookingStatus.WAITING) {
-            throw new ValidationException(String.format("Статус брони отличен от %s", BookingStatus.WAITING));
+            throw new ValidationException(String.format(
+                    "Статус брони отличен от %s", BookingStatus.WAITING));
         }
         User booker = validateUser(booking.getBookerId());
         Item item = validateItem(BookingMapper.toBookingDto(booking), booking.getBookerId());
@@ -124,50 +114,70 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public Collection<BookingFullDto> findUserBookings(long bookerId, String state, int from, int size) {
         log.info("Поиск бронирований от пользователя (id={}) для state = {}", bookerId, state);
-        BookingState.validateState(state);
         User booker = validateUser(bookerId);
-        int page = validatePage(from, size);
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "start"));
-        Page<Booking> bookings;
-        switch (BookingState.valueOf(state)) {
-            case ALL:
-                bookings = repository.findAllByBookerId(bookerId, pageRequest);
-                break;
-            case CURRENT:
-                bookings = repository.findAllByBookerIdAndStartBeforeAndEndAfter(bookerId, LocalDateTime.now(),
-                        LocalDateTime.now(), pageRequest);
-                break;
-            case PAST:
-                bookings = repository.findAllByBookerIdAndEndBefore(bookerId, LocalDateTime.now(), pageRequest);
-                break;
-            case FUTURE:
-                bookings = repository.findAllByBookerIdAndStartAfter(bookerId, LocalDateTime.now(), pageRequest);
-                break;
-            case WAITING:
-            case REJECTED:
-                bookings = repository.findAllByBookerIdAndStatus(bookerId, BookingStatus.valueOf(state), pageRequest);
-                break;
-            default:
-                throw new ValidationException(String.format("Unknown state: %s", state));
+        int page = from / size;
+        if (state.equals(BookingState.ALL.name())) {
+            return repository.findAllByBookerId(bookerId, PageRequest.of(page, size,
+                            Sort.by(Sort.Direction.DESC, "start")))
+                    .stream()
+                    .map(booking -> BookingMapper.toBookingFullDto(
+                            booking, booker, itemRepository.findById(booking.getItemId()).get()))
+                    .collect(Collectors.toList());
+        } else if (state.equals(BookingState.CURRENT.name())) {
+            return repository.findAllByBookerIdAndStartBeforeAndEndAfter(
+                            bookerId, LocalDateTime.now(), LocalDateTime.now(), PageRequest.of(page, size,
+                                    Sort.by(Sort.Direction.DESC, "start")))
+                    .stream()
+                    .map(booking -> BookingMapper.toBookingFullDto(booking, booker,
+                            itemRepository.findById(booking.getItemId()).get()))
+                    .collect(Collectors.toList());
+        } else if (state.equals(BookingState.PAST.name())) {
+            return repository.findAllByBookerIdAndEndBefore(
+                            bookerId, LocalDateTime.now(), PageRequest.of(page, size,
+                                    Sort.by(Sort.Direction.DESC, "start")))
+                    .stream()
+                    .map(booking -> BookingMapper.toBookingFullDto(booking, booker,
+                            itemRepository.findById(booking.getItemId()).get()))
+                    .collect(Collectors.toList());
+        } else if (state.equals(BookingState.FUTURE.name())) {
+            return repository.findAllByBookerIdAndStartAfter(
+                            bookerId, LocalDateTime.now(), PageRequest.of(page, size,
+                                    Sort.by(Sort.Direction.DESC, "start")))
+                    .stream()
+                    .map(booking -> BookingMapper.toBookingFullDto(booking, booker,
+                            itemRepository.findById(booking.getItemId()).get()))
+                    .collect(Collectors.toList());
+        } else if (state.equals(BookingState.WAITING.name())) {
+            return repository.findAllByBookerIdAndStatus(
+                            bookerId, BookingStatus.WAITING, PageRequest.of(page, size,
+                                    Sort.by(Sort.Direction.DESC, "start")))
+                    .stream()
+                    .map(booking -> BookingMapper.toBookingFullDto(booking, booker,
+                            itemRepository.findById(booking.getItemId()).get()))
+                    .collect(Collectors.toList());
+        } else if (state.equals(BookingState.REJECTED.name())) {
+            return repository.findAllByBookerIdAndStatus(
+                            bookerId, BookingStatus.REJECTED, PageRequest.of(page, size,
+                                    Sort.by(Sort.Direction.DESC, "start")))
+                    .stream()
+                    .map(booking -> BookingMapper.toBookingFullDto(booking, booker,
+                            itemRepository.findById(booking.getItemId()).get()))
+                    .collect(Collectors.toList());
+        } else {
+            throw new ValidationException(String.format("Unknown state: %s", state));
         }
-        return bookings.stream()
-                .map(booking -> BookingMapper.toBookingFullDto(
-                        booking, booker, itemRepository.findById(booking.getItemId()).get()))
-                .collect(Collectors.toList());
     }
-
 
     @Override
     public Collection<BookingFullDto> findOwnerBookings(long ownerId, String state, int from, int size) {
         log.info("Поиск бронирований вещей пользователя (id={}) для state = {}", ownerId, state);
         validateUser(ownerId);
-        BookingState.validateState(state);
         try {
             BookingState bookingState = BookingState.valueOf(state);
         } catch (Exception e) {
             throw new ValidationException(String.format("Unknown state: %s", state));
         }
-        int page = validatePage(from, size);
+        int page = from / size;
         return repository.findAllByOwnerId(ownerId, state, LocalDateTime.now(),
                         PageRequest.of(page, size))
                 .stream()
@@ -185,16 +195,4 @@ public class BookingServiceImpl implements BookingService {
         User booker = validateUser(booking.getBookerId());
         return Optional.of(BookingMapper.toBookingFullDto(booking, booker, item));
     }
-
-    private int validatePage(int from, int size) {
-        if (size <= 0) {
-            throw new ValidationException(String.format("Параметр size (%s) задан некорректно", size));
-        }
-        if (from < 0) {
-            throw new ValidationException(String.format("Параметр from (%s) задан некорректно", from));
-        }
-        int page = from / size;
-        return page;
-    }
 }
-

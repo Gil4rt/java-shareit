@@ -1,4 +1,4 @@
-package ru.practicum.shareit.item.repository;
+package ru.practicum.shareit.item;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -7,7 +7,7 @@ import ru.practicum.shareit.item.model.Item;
 import java.util.Collection;
 
 public interface ItemRepository extends JpaRepository<Item, Long> {
-    Collection<Item> findByOwner(long userId);
+    Collection<Item> findByOwnerOrderById(long userId);
 
     @Query(" select i from Item i " +
             " where i.available = true" +

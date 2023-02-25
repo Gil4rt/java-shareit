@@ -1,28 +1,23 @@
 package ru.practicum.shareit.item.model;
 
-import lombok.*;
-import lombok.experimental.FieldDefaults;
+import lombok.Data;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "comments", schema = "public")
-@Getter
-@Setter
-@FieldDefaults(level = AccessLevel.PRIVATE)
-@AllArgsConstructor
-@NoArgsConstructor
+@Data
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long id;
+    private long id; // уникальный идентификатор комментария;
     @Column
-    String text;
+    private String text; // содержимое комментария;
     @Column(name = "item_id")
-    Long itemId;
+    private Long itemId; // вещь, к которой относится комментарий;
     @Column(name = "author_id")
-    Long authorId;
+    private Long authorId; // автор комментария;
     @Column
-    LocalDateTime created;
+    private LocalDateTime created; // дата создания комментария;
 }

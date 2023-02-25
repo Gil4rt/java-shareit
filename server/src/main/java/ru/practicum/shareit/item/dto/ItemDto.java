@@ -1,23 +1,14 @@
 package ru.practicum.shareit.item.dto;
 
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.FieldDefaults;
+import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
-
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ItemDto {
-    long id;
-    @NotBlank(message = "Name is required")
-    String name;
-    @NotBlank(message = "Description is required")
-    String description;
-    Boolean available;
-    Long requestId;
+    private long id; // уникальный идентификатор вещи;
+    private String name; // краткое название;
+    private String description; // развёрнутое описание;
+    private Boolean available; // статус о том, доступна или нет вещь для аренды;
+    private Long requestId; // если вещь была создана по запросу другого пользователя;
 }
