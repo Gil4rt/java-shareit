@@ -14,9 +14,7 @@ import javax.validation.constraints.NotBlank;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ItemDto {
     long id;
-    @NotBlank(message = "Name is required")
     String name;
-    @NotBlank(message = "Description is required")
     String description;
     Boolean available;
     Long requestId;
