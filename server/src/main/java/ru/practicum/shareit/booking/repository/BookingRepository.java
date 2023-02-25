@@ -9,7 +9,6 @@ import ru.practicum.shareit.booking.model.BookingStatus;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 
 public interface BookingRepository extends JpaRepository<Booking, Long> {
@@ -58,7 +57,4 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     Optional<Booking> findByItemIdAndBookerIdAndStatusAndEndBefore(
             long itemId, long userId, BookingStatus status, LocalDateTime now);
-
-    List<Booking> findAllByBookerIdAndItemIdAndStatusEqualsAndEndIsBefore(Long userId, Long itemId, BookingStatus approved,
-                                                                          LocalDateTime now);
 }
