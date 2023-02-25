@@ -139,6 +139,7 @@ public class ItemServiceImpl implements ItemService {
         }
         return item;
     }
+
     @Transactional
     @Override
     public boolean validateBookingItem(long itemId, long userId) {
