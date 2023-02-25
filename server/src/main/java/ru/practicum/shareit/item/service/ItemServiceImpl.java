@@ -3,8 +3,6 @@ package ru.practicum.shareit.item.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.shareit.booking.model.Booking;
-import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
@@ -25,6 +23,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static ru.practicum.shareit.booking.model.BookingStatus.APPROVED;
 
 @Transactional(readOnly = true)
 @Service
@@ -113,12 +113,14 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public Optional<CommentDto> addItemComment(long itemId, long userId, CommentDto commentDto) {
         User user = validateUser(userId);
-        if (validateBookingItem(itemId, userId)) {
-            Comment comment = commentRepository.save(CommentMapper.toComment(commentDto, itemId, userId));
-            return Optional.of(CommentMapper.toCommentDto(comment, user.getName()));
-        } else {
-            return Optional.empty();
+
+        if (bookingRepository.findAllByBookerIdAndItemIdAndStatusEqualsAndEndIsBefore(userId, itemId, APPROVED,
+                LocalDateTime.now()).isEmpty()) {
+            throw new ValidationException("Невозможно добавить комментарий.");
         }
+
+        Comment comment = commentRepository.save(CommentMapper.toComment(commentDto, itemId, userId));
+        return Optional.of(CommentMapper.toCommentDto(comment, user.getName()));
     }
 
     private User validateUser(long userId) {
@@ -138,18 +140,5 @@ public class ItemServiceImpl implements ItemService {
                     "Item (id = %s) was not found on the user (id = %s)", itemId, userId));
         }
         return item;
-    }
-
-    @Transactional
-    @Override
-    public boolean validateBookingItem(long itemId, long userId) {
-        Optional<Booking> booking = bookingRepository.findByItemIdAndBookerIdAndStatusAndEndBefore(
-                itemId, userId, BookingStatus.APPROVED, LocalDateTime.now());
-        if (booking.isPresent()) {
-            return true;
-        } else {
-            throw new ValidationException(String.format(
-                    "Пользователь (id = %s) не брал вещь (id = %s) в аренду", userId, itemId));
-        }
     }
 }

@@ -22,6 +22,4 @@ public interface ItemService {
 
     Optional<CommentDto> addItemComment(long itemId, long userId, CommentDto commentDto);
 
-    boolean validateBookingItem(long itemId, long userId);
-
 }
