@@ -1,11 +1,19 @@
 package ru.practicum.shareit.request.dto;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
-@Data
+import javax.validation.constraints.NotBlank;
+
+@Getter
+@Setter
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ItemRequestDto {
-    private long id; // уникальный идентификатор запроса;
-    private String description; // текст запроса, содержащий описание требуемой вещи;
+    long id;
+    @NotBlank(message = "Description is required")
+    String description;
 }

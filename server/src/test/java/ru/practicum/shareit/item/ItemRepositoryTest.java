@@ -6,7 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.user.User;
+import ru.practicum.shareit.item.repository.ItemRepository;
+import ru.practicum.shareit.user.model.User;
 
 import java.util.Collection;
 
@@ -27,8 +28,8 @@ class ItemRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        user.setName("Dima");
-        user.setEmail("dimano@mail.ru");
+        user.setName("Eugene");
+        user.setEmail("jyk@gmail.com");
 
         item.setName("Дрель");
         item.setDescription("Инструмент для сверления");

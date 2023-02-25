@@ -4,41 +4,46 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.service.UserService;
 
+import javax.validation.Valid;
 import java.util.Collection;
+
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/users")
+@RequestMapping(path = "/users")
 public class UserController {
-    private final UserService service;
+
+    private final UserService userService;
 
     @GetMapping
-    public Collection<User> getAllUsers() {
-        return service.getAllUsers();
+    public Collection<UserDto> getAllUsers() {
+        return userService.findAll();
     }
 
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        return new ResponseEntity<>(service.saveUser(user), HttpStatus.CREATED);
+    public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto) {
+        return new ResponseEntity<>(userService.save(userDto), HttpStatus.CREATED);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable long id, @RequestBody User user) {
-        user.setId(id);
-        return service.updateUser(user).map(updatedUser -> new ResponseEntity<>(updatedUser, HttpStatus.OK))
+    public ResponseEntity<UserDto> updateUser(@PathVariable long id, @RequestBody UserDto userDto) {
+        userDto.setId(id);
+        return userService.update(userDto).map(updatedUser -> new ResponseEntity<>(updatedUser, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> findUserById(@PathVariable long id) {
-        return service.getUser(id).map(user -> new ResponseEntity<>(user, HttpStatus.OK))
+    public ResponseEntity<UserDto> findUserById(@PathVariable long id) {
+        return userService.getUserDto(id).map(user -> new ResponseEntity<>(user, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<User> deleteUserById(@PathVariable long id) {
-        return service.deleteUser(id) ? new ResponseEntity<>(HttpStatus.OK)
+    public ResponseEntity<UserDto> deleteUserById(@PathVariable long id) {
+        return userService.delete(id) ? new ResponseEntity<>(HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }

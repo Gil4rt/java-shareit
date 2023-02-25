@@ -1,20 +1,23 @@
 package ru.practicum.shareit.booking.dto;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import ru.practicum.shareit.booking.BookingStatus;
+import lombok.experimental.FieldDefaults;
+import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.user.User;
+import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class BookingFullDto {
-    private Long id; // уникальный идентификатор вещи
-    private LocalDateTime start; // дата и время начала бронирования
-    private LocalDateTime end; // дата и время конца бронирования
-    private BookingStatus status; // статус бронирования
-    private User booker; // пользователь, который осуществляет бронирование
-    private Item item; // вещь, которую пользователь бронирует
+    Long id;
+    LocalDateTime start;
+    LocalDateTime end;
+    BookingStatus status;
+    User booker;
+    Item item;
 }

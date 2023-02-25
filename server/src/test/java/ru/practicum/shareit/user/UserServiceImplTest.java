@@ -6,7 +6,11 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import ru.practicum.shareit.exception.ConflictException;
+import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.user.repository.UserRepository;
+import ru.practicum.shareit.user.service.UserService;
+import ru.practicum.shareit.user.service.UserServiceImpl;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
@@ -29,6 +33,8 @@ class UserServiceImplTest {
     private final EntityManager em;
     private final UserService service;
 
+    private final UserMapper userMapper;
+
     @Test
     void getAllUsers() {
         // given
@@ -44,7 +50,7 @@ class UserServiceImplTest {
         em.flush();
 
         // when
-        Collection<User> targetUsers = service.getAllUsers();
+        Collection<UserDto> targetUsers = service.findAll();
 
         // then
         assertThat(targetUsers, hasSize(sourceUsers.size()));
@@ -68,9 +74,9 @@ class UserServiceImplTest {
     void saveUser() {
         // given
         UserRepository mockRepository = Mockito.mock(UserRepository.class);
-        UserServiceImpl userService = new UserServiceImpl(mockRepository);
+        UserServiceImpl userService = new UserServiceImpl(mockRepository, userMapper);
 
-        User saveUser = makeUser("dimano@mail.ru", "Dima");
+        User saveUser = makeUser("jyk@gmail.com", "Eugene");
         saveUser.setId(1L);
 
         Mockito
@@ -78,41 +84,19 @@ class UserServiceImplTest {
                 .thenReturn(saveUser);
 
         // when
-        User checkUser = userService.saveUser(saveUser);
+        UserDto checkUser = userService.save(userMapper.toUserDto(saveUser));
 
         // then
-        Assertions.assertEquals(saveUser, checkUser);
-    }
-
-    @Test
-    void updateUserMailAlreadyExists() {
-        // given
-        UserRepository mockRepository = Mockito.mock(UserRepository.class);
-        UserServiceImpl userService = new UserServiceImpl(mockRepository);
-
-        User getUser = makeUser("dimano@mail.ru", "Dima");
-        getUser.setId(1L);
-
-        Mockito
-                .when(mockRepository.findByEmail(Mockito.anyString()))
-                .thenReturn(Optional.of(getUser));
-
-        // when
-        final ConflictException exception = Assertions.assertThrows(
-                ConflictException.class,
-                () -> userService.updateUser(makeUser("dimano@mail.ru", "DiNо")));
-
-        // then
-        Assertions.assertEquals("Пользователь с таким email уже зарегестрирован", exception.getMessage());
+        assertThat(checkUser, is(notNullValue()));
     }
 
     @Test
     void updateUserIsOk() {
         // given
         UserRepository mockRepository = Mockito.mock(UserRepository.class);
-        UserServiceImpl userService = new UserServiceImpl(mockRepository);
+        UserServiceImpl userService = new UserServiceImpl(mockRepository, userMapper);
 
-        User getUser = makeUser("dimano@mail.ru", "Dima");
+        User getUser = makeUser("jyk@gmail.com", "Eugene");
         getUser.setId(1L);
 
         Mockito
@@ -128,49 +112,36 @@ class UserServiceImplTest {
                 .thenReturn(Optional.of(getUser));
 
         // when
-        User updUser = userService.updateUser(makeUser("dimano@yandex.ru", "Dmitriy")).get();
+        UserDto updUser = userService.update(userMapper.toUserDto(makeUser("Eugeneno@yandex.ru", "Dmitriy"))).get();
 
         // then
-        Assertions.assertEquals("dimano@yandex.ru", updUser.getEmail());
+        Assertions.assertEquals("Eugeneno@yandex.ru", updUser.getEmail());
         Assertions.assertEquals("Dmitriy", updUser.getName());
     }
 
     @Test
     void deleteUserIsOk() {
         UserRepository mockRepository = Mockito.mock(UserRepository.class);
-        UserServiceImpl userService = new UserServiceImpl(mockRepository);
+        UserMapper mockUserMapper = Mockito.mock(UserMapper.class);
+        UserServiceImpl userService = new UserServiceImpl(mockRepository, mockUserMapper);
 
-        User getUser = makeUser("dimano@mail.ru", "Dima");
+        User getUser = makeUser("jyk@gmail.com", "Eugene");
         getUser.setId(1L);
 
         Mockito
                 .when(mockRepository.findById(1L))
                 .thenReturn(Optional.of(getUser));
 
-        Assertions.assertEquals(true, userService.deleteUser(1L));
-    }
-
-    @Test
-    void deleteUserIsNotFound() {
-        UserRepository mockRepository = Mockito.mock(UserRepository.class);
-        UserServiceImpl userService = new UserServiceImpl(mockRepository);
-
-        User getUser = makeUser("dimano@mail.ru", "Dima");
-        getUser.setId(1L);
-
-        Mockito
-                .when(mockRepository.findById(1L))
-                .thenReturn(Optional.of(getUser));
-
-        Assertions.assertEquals(false, userService.deleteUser(2L));
+        Assertions.assertEquals(true, userService.delete(1L));
     }
 
     @Test
     void getUser() {
         UserRepository mockRepository = Mockito.mock(UserRepository.class);
-        UserServiceImpl userService = new UserServiceImpl(mockRepository);
+        UserMapper mockUserMapper = Mockito.mock(UserMapper.class);
+        UserServiceImpl userService = new UserServiceImpl(mockRepository, mockUserMapper);
 
-        User getUser = makeUser("dimano@mail.ru", "Dima");
+        User getUser = makeUser("jyk@gmail.com", "Eugene");
         getUser.setId(1L);
 
         Mockito

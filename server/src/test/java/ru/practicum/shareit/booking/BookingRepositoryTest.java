@@ -7,8 +7,11 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.booking.model.BookingStatus;
+import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.user.User;
+import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -40,8 +43,8 @@ class BookingRepositoryTest {
 
     @BeforeEach
     void setup() {
-        owner.setName("Dima");
-        owner.setEmail("dimano@mail.ru");
+        owner.setName("Eugene");
+        owner.setEmail("jyk@gmail.com");
         ownerId = em.persist(owner).getId();
 
         item.setName("Дрель");
@@ -51,7 +54,7 @@ class BookingRepositoryTest {
         itemId = em.persist(item).getId();
 
         booker.setName("DN");
-        booker.setEmail("dimano@yandex.ru");
+        booker.setEmail("Eugeneno@yandex.ru");
         bookerId = em.persist(booker).getId();
 
         LocalDateTime lastStart = LocalDateTime.now().minusDays(10);

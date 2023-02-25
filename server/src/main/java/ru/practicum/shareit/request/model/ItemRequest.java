@@ -1,4 +1,4 @@
-package ru.practicum.shareit.item.model;
+package ru.practicum.shareit.request.model;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -6,24 +6,22 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+
 
 @Getter
 @Setter
 @Entity
-@Table(name = "items", schema = "public")
+@Table(name = "requests", schema = "public")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Item {
+public class ItemRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long id;
-    @Column
-    String name;
+    Long id;
     @Column
     String description;
-    @Column(name = "is_available")
-    Boolean available;
-    @Column(name = "owner_id")
-    Long owner;
-    @Column(name = "request_id")
-    Long requestId;
+    @Column(name = "requestor_id")
+    Long requestor;
+    @Column
+    LocalDateTime created;
 }

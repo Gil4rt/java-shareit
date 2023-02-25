@@ -9,12 +9,18 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import ru.practicum.shareit.exception.NotFoundException;
-import ru.practicum.shareit.item.ItemRepository;
+import ru.practicum.shareit.exception.ValidationException;
+import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.dto.ItemRequestFullDto;
-import ru.practicum.shareit.user.User;
-import ru.practicum.shareit.user.UserRepository;
-import ru.practicum.shareit.user.UserService;
+import ru.practicum.shareit.request.model.ItemRequest;
+import ru.practicum.shareit.request.repository.ItemRequestRepository;
+import ru.practicum.shareit.request.service.ItemRequestService;
+import ru.practicum.shareit.request.service.ItemRequestServiceImpl;
+import ru.practicum.shareit.user.UserMapper;
+import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.user.repository.UserRepository;
+import ru.practicum.shareit.user.service.UserService;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -40,10 +46,12 @@ class ItemRequestServiceImplTest {
     private final ItemRequestService service;
     private final UserService userService;
 
+    private final UserMapper userMapper;
+
     @Test
     void findUserItemRequests() {
         // given
-        User user = makeUser("dimano@mail.ru", "Dima");
+        User user = makeUser("jyk@gmail.com", "Eugene");
         em.persist(user);
         em.flush();
 
@@ -83,8 +91,8 @@ class ItemRequestServiceImplTest {
     @Test
     void saveItemRequest() {
         // given
-        User user = makeUser("dimano@mail.ru", "Dima");
-        long userId = userService.saveUser(user).getId();
+        User user = makeUser("jyk@gmail.com", "Eugene");
+        long userId = userService.save(userMapper.toUserDto(user)).getId();
 
         ItemRequestDto itemRequestDto = new ItemRequestDto(1L, "палатка");
 
@@ -109,7 +117,7 @@ class ItemRequestServiceImplTest {
         ItemRequestServiceImpl itemRequestService =
                 new ItemRequestServiceImpl(mockRepository, mockItemRepository, mockUserRepository);
 
-        User user = makeUser("dimano@mail.ru", "Dima");
+        User user = makeUser("jyk@gmail.com", "Eugene");
         user.setId(1L);
 
         Mockito
@@ -126,6 +134,56 @@ class ItemRequestServiceImplTest {
     }
 
     @Test
+    void findAllItemRequestsFromIsNotCorrected() {
+        // given
+        ItemRequestRepository mockRepository = Mockito.mock(ItemRequestRepository.class);
+        ItemRepository mockItemRepository = Mockito.mock(ItemRepository.class);
+        UserRepository mockUserRepository = Mockito.mock(UserRepository.class);
+        ItemRequestServiceImpl itemRequestService =
+                new ItemRequestServiceImpl(mockRepository, mockItemRepository, mockUserRepository);
+
+        User user = makeUser("jyk@gmail.com", "Eugene");
+        user.setId(1L);
+
+        Mockito
+                .when(mockUserRepository.findById(1L))
+                .thenReturn(Optional.of(user));
+
+        // when
+        ValidationException validationException = Assertions.assertThrows(
+                ValidationException.class,
+                () -> itemRequestService.findAllItemRequests(1L, -1, 20));
+
+        // then
+        Assertions.assertEquals("Параметр from (-1) задан некорректно", validationException.getMessage());
+    }
+
+    @Test
+    void findAllItemRequestsSizeIsNotCorrected() {
+        // given
+        ItemRequestRepository mockRepository = Mockito.mock(ItemRequestRepository.class);
+        ItemRepository mockItemRepository = Mockito.mock(ItemRepository.class);
+        UserRepository mockUserRepository = Mockito.mock(UserRepository.class);
+        ItemRequestServiceImpl itemRequestService =
+                new ItemRequestServiceImpl(mockRepository, mockItemRepository, mockUserRepository);
+
+        User user = makeUser("jyk@gmail.com", "Eugene");
+        user.setId(1L);
+
+        Mockito
+                .when(mockUserRepository.findById(1L))
+                .thenReturn(Optional.of(user));
+
+        // when
+        ValidationException validationException = Assertions.assertThrows(
+                ValidationException.class,
+                () -> itemRequestService.findAllItemRequests(1L, 0, 0));
+
+        // then
+        Assertions.assertEquals("Параметр size (0) задан некорректно", validationException.getMessage());
+    }
+
+    @Test
     void findAllItemRequestsIsOk() {
         // given
         ItemRequestRepository mockRepository = Mockito.mock(ItemRequestRepository.class);
@@ -134,7 +192,7 @@ class ItemRequestServiceImplTest {
         ItemRequestServiceImpl itemRequestService =
                 new ItemRequestServiceImpl(mockRepository, mockItemRepository, mockUserRepository);
 
-        User user = makeUser("dimano@mail.ru", "Dima");
+        User user = makeUser("jyk@gmail.com", "Eugene");
         user.setId(1L);
 
         Mockito
@@ -179,7 +237,7 @@ class ItemRequestServiceImplTest {
         ItemRequestServiceImpl itemRequestService =
                 new ItemRequestServiceImpl(mockRepository, mockItemRepository, mockUserRepository);
 
-        User user = makeUser("dimano@mail.ru", "Dima");
+        User user = makeUser("jyk@gmail.com", "Eugene");
         user.setId(1L);
 
         Mockito
@@ -207,7 +265,7 @@ class ItemRequestServiceImplTest {
         ItemRequestServiceImpl itemRequestService =
                 new ItemRequestServiceImpl(mockRepository, mockItemRepository, mockUserRepository);
 
-        User user = makeUser("dimano@mail.ru", "Dima");
+        User user = makeUser("jyk@gmail.com", "Eugene");
         user.setId(1L);
 
         Mockito
