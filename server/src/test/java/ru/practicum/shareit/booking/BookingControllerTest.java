@@ -10,7 +10,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingFullDto;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.user.User;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
@@ -27,23 +27,31 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(BookingController.class)
 class BookingControllerTest {
-    private static final String X_SHARER_USER_ID = "X-Sharer-User-Id";
-    private static final String VALUE_HEADER_ONE = "1";
-    private static final String ID = "$.id";
-    private static final String START = "$.start";
-    private static final String END = "$.end";
-    private static final String STATUS = "$.status";
-    private static final String BOOKER_ID = "$.booker.id";
-    private static final String BOOKER_NAME = "$.booker.name";
-    private static final String ITEM_ID = "$.item.id";
-    private static final String ITEM_NAME = "$.item.name";
+    @MockBean
+    private BookingService service;
+
+    @Autowired
+    private MockMvc mvc;
+
+    @Autowired
+    private ObjectMapper mapper;
+
+    private LocalDateTime start = LocalDateTime.of(2022, 10, 1, 12, 0, 1);
+
+    private LocalDateTime end = start.plusDays(7);
+
+    interface Creator<T> {
+        T create();
+    }
+
     Creator<User> creatorUser = () -> {
         User user = new User();
         user.setId(1L);
-        user.setName("Eugene");
-        user.setEmail("jyk@gmail.com");
+        user.setName("Dima");
+        user.setEmail("dimano@mail.ru");
         return user;
     };
+
     Creator<Item> creatorItem = () -> {
         Item item = new Item();
         item.setId(2L);
@@ -52,20 +60,15 @@ class BookingControllerTest {
         item.setOwner(3L);
         return item;
     };
-    @MockBean
-    private BookingService service;
-    @Autowired
-    private MockMvc mvc;
-    @Autowired
-    private ObjectMapper mapper;
-    private LocalDateTime start = LocalDateTime.of(2022, 10, 1, 12, 0, 1);
-    private LocalDateTime end = start.plusDays(7);
-    private BookingDto bookingDto = new BookingDto(1L, start, end);
+
     private User user = creatorUser.create();
+
     private Item item = creatorItem.create();
+
     private BookingFullDto bookingFullDto = new BookingFullDto(
             4L, start, end, BookingStatus.WAITING, user, item);
 
+    private BookingDto bookingDto = new BookingDto(1L, start, end);
 
     @Test
     void createBooking() throws Exception {
@@ -73,20 +76,20 @@ class BookingControllerTest {
                 .thenReturn(bookingFullDto);
 
         mvc.perform(post("/bookings")
-                        .content(mapper.writeValueAsString(bookingDto))
-                        .header(X_SHARER_USER_ID, VALUE_HEADER_ONE)
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
+                .content(mapper.writeValueAsString(bookingDto))
+                .header("X-Sharer-User-Id", "1")
+                .characterEncoding(StandardCharsets.UTF_8)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath(ID, is(bookingFullDto.getId()), Long.class))
-                .andExpect(jsonPath(START, is(bookingFullDto.getStart().toString())))
-                .andExpect(jsonPath(END, is(bookingFullDto.getEnd().toString())))
-                .andExpect(jsonPath(STATUS, is(bookingFullDto.getStatus().toString())))
-                .andExpect(jsonPath(BOOKER_ID, is(bookingFullDto.getBooker().getId()), Long.class))
-                .andExpect(jsonPath(BOOKER_NAME, is(bookingFullDto.getBooker().getName())))
-                .andExpect(jsonPath(ITEM_ID, is(bookingFullDto.getItem().getId()), Long.class))
-                .andExpect(jsonPath(ITEM_NAME, is(bookingFullDto.getItem().getName())));
+                .andExpect(jsonPath("$.id", is(bookingFullDto.getId()), Long.class))
+                .andExpect(jsonPath("$.start", is(bookingFullDto.getStart().toString())))
+                .andExpect(jsonPath("$.end", is(bookingFullDto.getEnd().toString())))
+                .andExpect(jsonPath("$.status", is(bookingFullDto.getStatus().toString())))
+                .andExpect(jsonPath("$.booker.id", is(bookingFullDto.getBooker().getId()), Long.class))
+                .andExpect(jsonPath("$.booker.name", is(bookingFullDto.getBooker().getName())))
+                .andExpect(jsonPath("$.item.id", is(bookingFullDto.getItem().getId()), Long.class))
+                .andExpect(jsonPath("$.item.name", is(bookingFullDto.getItem().getName())));
     }
 
     @Test
@@ -95,20 +98,20 @@ class BookingControllerTest {
                 .thenReturn(Optional.of(bookingFullDto));
 
         mvc.perform(patch("/bookings/{id}", 4)
-                        .param("approved", "true")
-                        .header(X_SHARER_USER_ID, VALUE_HEADER_ONE)
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
+                .param("approved", "true")
+                .header("X-Sharer-User-Id", "1")
+                .characterEncoding(StandardCharsets.UTF_8)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath(ID, is(bookingFullDto.getId()), Long.class))
-                .andExpect(jsonPath(START, is(bookingFullDto.getStart().toString())))
-                .andExpect(jsonPath(END, is(bookingFullDto.getEnd().toString())))
-                .andExpect(jsonPath(STATUS, is(bookingFullDto.getStatus().toString())))
-                .andExpect(jsonPath(BOOKER_ID, is(bookingFullDto.getBooker().getId()), Long.class))
-                .andExpect(jsonPath(BOOKER_NAME, is(bookingFullDto.getBooker().getName())))
-                .andExpect(jsonPath(ITEM_ID, is(bookingFullDto.getItem().getId()), Long.class))
-                .andExpect(jsonPath(ITEM_NAME, is(bookingFullDto.getItem().getName())));
+                .andExpect(jsonPath("$.id", is(bookingFullDto.getId()), Long.class))
+                .andExpect(jsonPath("$.start", is(bookingFullDto.getStart().toString())))
+                .andExpect(jsonPath("$.end", is(bookingFullDto.getEnd().toString())))
+                .andExpect(jsonPath("$.status", is(bookingFullDto.getStatus().toString())))
+                .andExpect(jsonPath("$.booker.id", is(bookingFullDto.getBooker().getId()), Long.class))
+                .andExpect(jsonPath("$.booker.name", is(bookingFullDto.getBooker().getName())))
+                .andExpect(jsonPath("$.item.id", is(bookingFullDto.getItem().getId()), Long.class))
+                .andExpect(jsonPath("$.item.name", is(bookingFullDto.getItem().getName())));
     }
 
     @Test
@@ -117,13 +120,14 @@ class BookingControllerTest {
                 .thenReturn(Optional.empty());
 
         mvc.perform(patch("/bookings/{id}", 1)
-                        .param("approved", "true")
-                        .header(X_SHARER_USER_ID, VALUE_HEADER_ONE)
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
+                .param("approved", "true")
+                .header("X-Sharer-User-Id", "1")
+                .characterEncoding(StandardCharsets.UTF_8)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
+
 
     @Test
     void findBookingByIdOk() throws Exception {
@@ -131,19 +135,19 @@ class BookingControllerTest {
                 .thenReturn(Optional.of(bookingFullDto));
 
         mvc.perform(get("/bookings/{id}", 4)
-                        .header(X_SHARER_USER_ID, VALUE_HEADER_ONE)
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
+                .header("X-Sharer-User-Id", "1")
+                .characterEncoding(StandardCharsets.UTF_8)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath(ID, is(bookingFullDto.getId()), Long.class))
-                .andExpect(jsonPath(START, is(bookingFullDto.getStart().toString())))
-                .andExpect(jsonPath(END, is(bookingFullDto.getEnd().toString())))
-                .andExpect(jsonPath(STATUS, is(bookingFullDto.getStatus().toString())))
-                .andExpect(jsonPath(BOOKER_ID, is(bookingFullDto.getBooker().getId()), Long.class))
-                .andExpect(jsonPath(BOOKER_NAME, is(bookingFullDto.getBooker().getName())))
-                .andExpect(jsonPath(ITEM_ID, is(bookingFullDto.getItem().getId()), Long.class))
-                .andExpect(jsonPath(ITEM_NAME, is(bookingFullDto.getItem().getName())));
+                .andExpect(jsonPath("$.id", is(bookingFullDto.getId()), Long.class))
+                .andExpect(jsonPath("$.start", is(bookingFullDto.getStart().toString())))
+                .andExpect(jsonPath("$.end", is(bookingFullDto.getEnd().toString())))
+                .andExpect(jsonPath("$.status", is(bookingFullDto.getStatus().toString())))
+                .andExpect(jsonPath("$.booker.id", is(bookingFullDto.getBooker().getId()), Long.class))
+                .andExpect(jsonPath("$.booker.name", is(bookingFullDto.getBooker().getName())))
+                .andExpect(jsonPath("$.item.id", is(bookingFullDto.getItem().getId()), Long.class))
+                .andExpect(jsonPath("$.item.name", is(bookingFullDto.getItem().getName())));
     }
 
     @Test
@@ -152,10 +156,10 @@ class BookingControllerTest {
                 .thenReturn(Optional.empty());
 
         mvc.perform(get("/bookings/{id}", 1)
-                        .header(X_SHARER_USER_ID, VALUE_HEADER_ONE)
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
+                .header("X-Sharer-User-Id", "1")
+                .characterEncoding(StandardCharsets.UTF_8)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
 
@@ -165,10 +169,10 @@ class BookingControllerTest {
                 .thenReturn(List.of(bookingFullDto));
 
         mvc.perform(get("/bookings")
-                        .header(X_SHARER_USER_ID, VALUE_HEADER_ONE)
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
+                .header("X-Sharer-User-Id", "1")
+                .characterEncoding(StandardCharsets.UTF_8)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].id", is(bookingFullDto.getId()), Long.class))
@@ -187,10 +191,10 @@ class BookingControllerTest {
                 .thenReturn(List.of(bookingFullDto));
 
         mvc.perform(get("/bookings/owner")
-                        .header(X_SHARER_USER_ID, VALUE_HEADER_ONE)
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
+                .header("X-Sharer-User-Id", "1")
+                .characterEncoding(StandardCharsets.UTF_8)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].id", is(bookingFullDto.getId()), Long.class))
@@ -201,10 +205,6 @@ class BookingControllerTest {
                 .andExpect(jsonPath("$[0].booker.name", is(bookingFullDto.getBooker().getName())))
                 .andExpect(jsonPath("$[0].item.id", is(bookingFullDto.getItem().getId()), Long.class))
                 .andExpect(jsonPath("$[0].item.name", is(bookingFullDto.getItem().getName())));
-    }
-
-    interface Creator<T> {
-        T create();
     }
 
 }

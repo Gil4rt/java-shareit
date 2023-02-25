@@ -11,10 +11,10 @@ import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingFullDto;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
+import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.item.repository.ItemRepository;
-import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.user.repository.UserRepository;
+import ru.practicum.shareit.user.User;
+import ru.practicum.shareit.user.UserRepository;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
@@ -46,7 +46,7 @@ class BookingServiceImplTest {
     private LocalDateTime now = LocalDateTime.now();
 
     private void givenUserBookings() {
-        user = makeUser("jyk@gmail.com", "Eugene");
+        user = makeUser("dimano@mail.ru", "Dima");
         em.persist(user);
         em.flush();
 
@@ -120,7 +120,7 @@ class BookingServiceImplTest {
     }
 
     private void givenBookings(int startPlus, int endPlus, boolean available, long ownerId, long bookerId) {
-        user = makeUser("jyk@gmail.com", "Eugene");
+        user = makeUser("dimano@mail.ru", "Dima");
         user.setId(1L);
 
         item = makeItem(ownerId, "удочка", "инструмент для ловли рыбы");
@@ -146,71 +146,6 @@ class BookingServiceImplTest {
 
     private void givenBookings() {
         givenBookings(5, 10, true, 1L, 1L);
-    }
-
-    @Test
-    void saveBookingStartInThePast() {
-        // given
-        BookingRepository mockBookingRepository = Mockito.mock(BookingRepository.class);
-        ItemRepository mockItemRepository = Mockito.mock(ItemRepository.class);
-        UserRepository mockUserRepository = Mockito.mock(UserRepository.class);
-        BookingServiceImpl bookingService =
-                new BookingServiceImpl(mockBookingRepository, mockItemRepository, mockUserRepository);
-
-        BookingDto bookingDto = new BookingDto(1L, now.minusDays(10), now.minusDays(5));
-
-        // when
-        ValidationException validationException = Assertions.assertThrows(
-                ValidationException.class,
-                () -> bookingService.saveBooking(bookingDto, 1L));
-
-        // then
-        Assertions.assertEquals(String.format("Дата начала брони (%s) находится в прошлом", bookingDto.getStart()),
-                validationException.getMessage());
-
-    }
-
-    @Test
-    void saveBookingEndInThePast() {
-        // given
-        BookingRepository mockBookingRepository = Mockito.mock(BookingRepository.class);
-        ItemRepository mockItemRepository = Mockito.mock(ItemRepository.class);
-        UserRepository mockUserRepository = Mockito.mock(UserRepository.class);
-        BookingServiceImpl bookingService =
-                new BookingServiceImpl(mockBookingRepository, mockItemRepository, mockUserRepository);
-
-        BookingDto bookingDto = new BookingDto(1L, now.plusDays(5), now.minusDays(5));
-
-        // when
-        ValidationException validationException = Assertions.assertThrows(
-                ValidationException.class,
-                () -> bookingService.saveBooking(bookingDto, 1L));
-
-        // then
-        Assertions.assertEquals(String.format("Дата окончания брони (%s) находится в прошлом", bookingDto.getEnd()),
-                validationException.getMessage());
-    }
-
-    @Test
-    void saveBookingStartIsGreaterThanEnd() {
-        // given
-        BookingRepository mockBookingRepository = Mockito.mock(BookingRepository.class);
-        ItemRepository mockItemRepository = Mockito.mock(ItemRepository.class);
-        UserRepository mockUserRepository = Mockito.mock(UserRepository.class);
-        BookingServiceImpl bookingService =
-                new BookingServiceImpl(mockBookingRepository, mockItemRepository, mockUserRepository);
-
-        BookingDto bookingDto = new BookingDto(1L, now.plusDays(5), now.plusDays(1));
-
-        // when
-        ValidationException validationException = Assertions.assertThrows(
-                ValidationException.class,
-                () -> bookingService.saveBooking(bookingDto, 1L));
-
-        // then
-        Assertions.assertEquals(String.format("Дата окончания брони (%s) раньше даты начала (%s)",
-                        bookingDto.getEnd(), bookingDto.getStart()),
-                validationException.getMessage());
     }
 
     @Test
@@ -563,7 +498,7 @@ class BookingServiceImplTest {
         BookingServiceImpl bookingService =
                 new BookingServiceImpl(mockBookingRepository, mockItemRepository, mockUserRepository);
 
-        givenBookings(1L, 2L);
+        givenBookings(1L,2L);
 
         Mockito
                 .when(mockUserRepository.findById(Mockito.anyLong()))
@@ -587,70 +522,6 @@ class BookingServiceImplTest {
     }
 
     @Test
-    void findOwnerBookingsFromIsNotCorrect() {
-        // given
-        BookingRepository mockBookingRepository = Mockito.mock(BookingRepository.class);
-        ItemRepository mockItemRepository = Mockito.mock(ItemRepository.class);
-        UserRepository mockUserRepository = Mockito.mock(UserRepository.class);
-        BookingServiceImpl bookingService =
-                new BookingServiceImpl(mockBookingRepository, mockItemRepository, mockUserRepository);
-
-        givenBookings(1L, 2L);
-
-        Mockito
-                .when(mockUserRepository.findById(Mockito.anyLong()))
-                .thenReturn(Optional.of(user));
-
-        Mockito
-                .when(mockItemRepository.findById(Mockito.anyLong()))
-                .thenReturn(Optional.of(item));
-
-        Mockito
-                .when(mockBookingRepository.findById(1L))
-                .thenReturn(Optional.of(booking));
-
-        // when
-        ValidationException validationException = Assertions.assertThrows(
-                ValidationException.class,
-                () -> bookingService.findOwnerBookings(1L, "ALL", -1, 20));
-
-        // then
-        Assertions.assertEquals("Параметр from (-1) задан некорректно", validationException.getMessage());
-    }
-
-    @Test
-    void findOwnerBookingsSizeIsNotCorrect() {
-        // given
-        BookingRepository mockBookingRepository = Mockito.mock(BookingRepository.class);
-        ItemRepository mockItemRepository = Mockito.mock(ItemRepository.class);
-        UserRepository mockUserRepository = Mockito.mock(UserRepository.class);
-        BookingServiceImpl bookingService =
-                new BookingServiceImpl(mockBookingRepository, mockItemRepository, mockUserRepository);
-
-        givenBookings(1L, 2L);
-
-        Mockito
-                .when(mockUserRepository.findById(Mockito.anyLong()))
-                .thenReturn(Optional.of(user));
-
-        Mockito
-                .when(mockItemRepository.findById(Mockito.anyLong()))
-                .thenReturn(Optional.of(item));
-
-        Mockito
-                .when(mockBookingRepository.findById(1L))
-                .thenReturn(Optional.of(booking));
-
-        // when
-        ValidationException validationException = Assertions.assertThrows(
-                ValidationException.class,
-                () -> bookingService.findOwnerBookings(1L, "ALL", 0, 0));
-
-        // then
-        Assertions.assertEquals("Параметр size (0) задан некорректно", validationException.getMessage());
-    }
-
-    @Test
     void findOwnerBookingsIsOk() {
         // given
         BookingRepository mockBookingRepository = Mockito.mock(BookingRepository.class);
@@ -659,7 +530,7 @@ class BookingServiceImplTest {
         BookingServiceImpl bookingService =
                 new BookingServiceImpl(mockBookingRepository, mockItemRepository, mockUserRepository);
 
-        givenBookings(1L, 2L);
+        givenBookings(1L,2L);
         List<Booking> sourceBookings = List.of(
                 makeBooking(2L, item.getId(), now.plusDays(1), now.plusDays(2), BookingStatus.APPROVED),
                 makeBooking(2L, item.getId(), now.plusDays(3), now.plusDays(4), BookingStatus.REJECTED),

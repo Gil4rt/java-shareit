@@ -7,7 +7,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.user.User;
 
 import java.time.LocalDateTime;
 
@@ -30,8 +30,8 @@ class ItemRequestRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        user.setName("Eugene");
-        user.setEmail("jyk@gmail.com");
+        user.setName("Dima");
+        user.setEmail("dimano@mail.ru");
         userId = em.persist(user).getId();
 
         itemRequest.setRequestor(userId);

@@ -8,13 +8,13 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.practicum.shareit.user.dto.UserDto;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
@@ -24,98 +24,98 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(UserController.class)
 class UserControllerTest {
-    private static final String ID = "$.id";
-    private static final String NAME = "$.name";
-    private static final String EMAIL = "$.email";
     @MockBean
     private UserService service;
+
     @Autowired
     private MockMvc mvc;
+
     @Autowired
     private ObjectMapper mapper;
-    private UserDto userDto = new UserDto();
+
+    private User user = new User();
 
     @BeforeEach
     void setUp() {
-        userDto.setId(1L);
-        userDto.setName("Eugene");
-        userDto.setEmail("jyk@gmail.com");
+        user.setId(1L);
+        user.setName("Dima");
+        user.setEmail("dimano@mail.ru");
     }
 
     @Test
     void createUser() throws Exception {
-        when(service.save(any()))
-                .thenReturn(userDto);
+        when(service.saveUser(any()))
+                .thenReturn(user);
 
         mvc.perform(post("/users")
-                        .content(mapper.writeValueAsString(userDto))
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
+                .content(mapper.writeValueAsString(user))
+                .characterEncoding(StandardCharsets.UTF_8)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath(ID, is(userDto.getId()), Long.class))
-                .andExpect(jsonPath(NAME, is(userDto.getName())))
-                .andExpect(jsonPath(EMAIL, is(userDto.getEmail())));
+                .andExpect(jsonPath("$.id", is(user.getId()), Long.class))
+                .andExpect(jsonPath("$.name", is(user.getName())))
+                .andExpect(jsonPath("$.email", is(user.getEmail())));
     }
 
     @Test
     void getAllUsers() throws Exception {
-        when(service.findAll())
-                .thenReturn(List.of(userDto));
+        when(service.getAllUsers())
+                .thenReturn(List.of(user));
 
         mvc.perform(get("/users")
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
+                .characterEncoding(StandardCharsets.UTF_8)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].id", is(userDto.getId()), Long.class))
-                .andExpect(jsonPath("$[0].name", is(userDto.getName())))
-                .andExpect(jsonPath("$[0].email", is(userDto.getEmail())));
+                .andExpect(jsonPath("$[0].id", is(user.getId()), Long.class))
+                .andExpect(jsonPath("$[0].name", is(user.getName())))
+                .andExpect(jsonPath("$[0].email", is(user.getEmail())));
     }
 
     @Test
     void updateUserIsOk() throws Exception {
-        when(service.update(any()))
-                .thenReturn(Optional.of(userDto));
+        when(service.updateUser(any()))
+                .thenReturn(Optional.of(user));
 
         mvc.perform(patch("/users/{id}", 1)
-                        .content(mapper.writeValueAsString(userDto))
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
+                .content(mapper.writeValueAsString(user))
+                .characterEncoding(StandardCharsets.UTF_8)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath(ID, is(userDto.getId()), Long.class))
-                .andExpect(jsonPath(NAME, is(userDto.getName())))
-                .andExpect(jsonPath(EMAIL, is(userDto.getEmail())));
+                .andExpect(jsonPath("$.id", is(user.getId()), Long.class))
+                .andExpect(jsonPath("$.name", is(user.getName())))
+                .andExpect(jsonPath("$.email", is(user.getEmail())));
     }
 
     @Test
     void updateUserIsNotFound() throws Exception {
-        when(service.update(any()))
+        when(service.updateUser(any()))
                 .thenReturn(Optional.empty());
 
         mvc.perform(patch("/users/{id}", 1)
-                        .content(mapper.writeValueAsString(userDto))
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
+                .content(mapper.writeValueAsString(user))
+                .characterEncoding(StandardCharsets.UTF_8)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     void findUserByIdIsOk() throws Exception {
-        when(service.getUserDto(anyLong()))
-                .thenReturn(Optional.of(userDto));
+        when(service.getUser(anyLong()))
+                .thenReturn(Optional.of(user));
 
         mvc.perform(get("/users/{id}", 1)
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
+                .characterEncoding(StandardCharsets.UTF_8)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath(ID, is(userDto.getId()), Long.class))
-                .andExpect(jsonPath(NAME, is(userDto.getName())))
-                .andExpect(jsonPath(EMAIL, is(userDto.getEmail())));
+                .andExpect(jsonPath("$.id", is(user.getId()), Long.class))
+                .andExpect(jsonPath("$.name", is(user.getName())))
+                .andExpect(jsonPath("$.email", is(user.getEmail())));
     }
 
     @Test
@@ -124,33 +124,33 @@ class UserControllerTest {
                 .thenReturn(Optional.empty());
 
         mvc.perform(get("/users/{id}", 2)
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
+                .characterEncoding(StandardCharsets.UTF_8)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     void deleteUserByIdIsOk() throws Exception {
-        when(service.delete(anyLong()))
+        when(service.deleteUser(anyLong()))
                 .thenReturn(true);
 
         mvc.perform(delete("/users/{id}", 1)
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
+                .characterEncoding(StandardCharsets.UTF_8)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 
     @Test
     void deleteUserByIdIsNotFound() throws Exception {
-        when(service.delete(anyLong()))
+        when(service.deleteUser(anyLong()))
                 .thenReturn(false);
 
         mvc.perform(delete("/users/{id}", 2)
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
+                .characterEncoding(StandardCharsets.UTF_8)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
 }
