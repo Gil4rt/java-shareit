@@ -253,7 +253,7 @@ class ItemServiceImplTest {
 
         // when and then
         Assertions.assertEquals("Спининг",
-                itemService.updateItem(1L, itemDto, 1L).getName());
+                itemService.updateItem(1L, itemDto, 1L).get().getName());
     }
 
     @Test
@@ -343,7 +343,7 @@ class ItemServiceImplTest {
                 .thenReturn(sourceItems);
 
         // when
-        Collection<ItemDto> targetItems =
+        Collection<Item> targetItems =
                 itemService.searchItems("поход");
 
         // then
