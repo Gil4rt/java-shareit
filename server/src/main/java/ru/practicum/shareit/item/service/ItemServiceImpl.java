@@ -57,23 +57,23 @@ public class ItemServiceImpl implements ItemService {
     @Transactional
     @Override
     public ItemDto saveItem(ItemDto itemDto, long userId) {
+        validateUser(userId);
         if (itemDto.getAvailable() == null) {
             throw new ValidationException("The status of the item has not been transferred");
         }
-        validateUser(userId);
         Item item = itemMapper.toItem(itemDto, userId);
         return itemMapper.toItemDto(repository.save(item));
     }
 
     @Transactional
     @Override
-    public ItemDto updateItem(long itemId, ItemDto itemDto, long userId) {
+    public Optional<ItemDto> updateItem(long itemId, ItemDto itemDto, long userId) {
 
         validateUser(userId);
         Optional<Item> itemOld = validateUserItem(itemId, userId);
         Item item = itemMapper.toItem(itemDto, itemOld.get());
         repository.save(item);
-        return itemMapper.toItemDto(item);
+        return Optional.of(itemMapper.toItemDto(item));
     }
 
     @Transactional
@@ -106,8 +106,8 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Collection<ItemDto> searchItems(String text) {
-        return text == null || text.isBlank() ? new ArrayList<>() : itemMapper.toItemDtoCollection(repository.search(text));
+    public Collection<Item> searchItems(String text) {
+        return text == null || text.isBlank() ? new ArrayList<>() : repository.search(text);
     }
 
     @Override

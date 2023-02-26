@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemFullDto;
+import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
 
 import javax.validation.Valid;
@@ -34,7 +35,8 @@ public class ItemController {
     public ResponseEntity<ItemDto> updateItem(@PathVariable long id,
                                               @RequestBody ItemDto itemDto,
                                               @RequestHeader(X_SHARER_USER_ID) long userId) {
-        return new ResponseEntity<>(itemService.updateItem(id, itemDto, userId), HttpStatus.OK);
+        return itemService.updateItem(id, itemDto, userId).map(updatedItem -> new ResponseEntity<>(updatedItem, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @GetMapping("/{id}")
@@ -52,7 +54,7 @@ public class ItemController {
     }
 
     @GetMapping("/search")
-    public Collection<ItemDto> searchItems(@RequestParam(required = false) String text) {
+    public Collection<Item> searchItems(@RequestParam(required = false) String text) {
         return itemService.searchItems(text);
     }
 
