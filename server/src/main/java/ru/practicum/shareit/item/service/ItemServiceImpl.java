@@ -56,13 +56,13 @@ public class ItemServiceImpl implements ItemService {
 
     @Transactional
     @Override
-    public ItemDto saveItem(ItemDto itemDto, long userId) {
+    public Item saveItem(ItemDto itemDto, long userId) {
         validateUser(userId);
         if (itemDto.getAvailable() == null) {
             throw new ValidationException("The status of the item has not been transferred");
         }
         Item item = itemMapper.toItem(itemDto, userId);
-        return itemMapper.toItemDto(repository.save(item));
+        return repository.save(item);
     }
 
     @Transactional

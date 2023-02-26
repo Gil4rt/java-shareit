@@ -112,7 +112,7 @@ class ItemControllerTest {
     @Test
     void createItem() throws Exception {
         when(service.saveItem(any(), anyLong()))
-                .thenReturn(itemDto);
+                .thenReturn(item);
 
         mvc.perform(post("/items")
                         .content(mapper.writeValueAsString(itemDto))

@@ -47,7 +47,7 @@ public class ItemController {
 
     @GetMapping("/search")
     public ResponseEntity<Object> searchItems(@RequestParam(required = false) String text,
-                                              @RequestHeader("X-Sharer-User-Id") long userId) {
+                                              @RequestHeader(X_SHARER_USER_ID) long userId) {
         return itemClient.searchItems(userId, text);
     }
 

@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface ItemService {
     Collection<ItemFullDto> findUserItems(long userId);
 
-    ItemDto saveItem(ItemDto itemDto, long userId);
+    Item saveItem(ItemDto itemDto, long userId);
 
     Optional<ItemDto> updateItem(long itemId, ItemDto itemDto, long userId);
 
