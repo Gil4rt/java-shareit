@@ -34,16 +34,13 @@ public class ItemServiceImpl implements ItemService {
     private final UserRepository userRepository;
 
     private final CommentRepository commentRepository;
-
     private final BookingRepository bookingRepository;
-
-    private final ItemMapper itemMapper;
 
     @Override
     public Collection<ItemFullDto> findUserItems(long userId) {
         return repository.findByOwnerOrderById(userId)
                 .stream()
-                .map(item -> itemMapper.toItemFullDto(item,
+                .map(item -> ItemMapper.toItemFullDto(item,
                         bookingRepository.findLastBooking(item.getId(), userId, LocalDateTime.now()),
                         bookingRepository.findNextBooking(item.getId(), userId, LocalDateTime.now()),
                         commentRepository.findAllByItemIdOrderByCreatedDesc(item.getId())
@@ -51,73 +48,6 @@ public class ItemServiceImpl implements ItemService {
                                 .map(comment -> CommentMapper.toCommentDto(comment, validateUser(comment.getAuthorId()).getName()))
                                 .collect(Collectors.toList())))
                 .collect(Collectors.toList());
-    }
-
-
-    @Transactional
-    @Override
-    public Item saveItem(ItemDto itemDto, long userId) {
-        validateUser(userId);
-        if (itemDto.getAvailable() == null) {
-            throw new ValidationException("The status of the item has not been transferred");
-        }
-        Item item = itemMapper.toItem(itemDto, userId);
-        return repository.save(item);
-    }
-
-    @Transactional
-    @Override
-    public Optional<Item> updateItem(long itemId, ItemDto itemDto, long userId) {
-        validateUser(userId);
-        Optional<Item> itemOld = validateUserItem(itemId, userId);
-        Item item = itemMapper.toItem(itemDto, itemOld.get());
-        repository.save(item);
-        return Optional.of(item);
-    }
-
-    @Transactional
-    @Override
-    public boolean deleteItem(long id, long userId) {
-        validateUser(userId);
-        Optional<Item> item = repository.findById(id);
-        if (item.isPresent()) {
-            repository.deleteById(id);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    @Override
-    public Optional<ItemFullDto> getItem(long id, long userId) {
-        Optional<Item> item = repository.findById(id);
-        if (item.isPresent()) {
-            return Optional.of(itemMapper.toItemFullDto(item.get(),
-                    bookingRepository.findLastBooking(id, userId, LocalDateTime.now()),
-                    bookingRepository.findNextBooking(id, userId, LocalDateTime.now()),
-                    commentRepository.findAllByItemIdOrderByCreatedDesc(id)
-                            .stream()
-                            .map(comment -> CommentMapper.toCommentDto(comment, validateUser(comment.getAuthorId()).getName()))
-                            .collect(Collectors.toList())));
-        } else {
-            return Optional.empty();
-        }
-    }
-
-    @Override
-    public Collection<Item> searchItems(String text) {
-        return text == null || text.isBlank() ? new ArrayList<>() : repository.search(text);
-    }
-
-    @Override
-    public Optional<CommentDto> addItemComment(long itemId, long userId, CommentDto commentDto) {
-        User user = validateUser(userId);
-        if (validateBookingItem(itemId, userId)) {
-            Comment comment = commentRepository.save(CommentMapper.toComment(commentDto, itemId, userId));
-            return Optional.of(CommentMapper.toCommentDto(comment, user.getName()));
-        } else {
-            return Optional.empty();
-        }
     }
 
     private User validateUser(long userId) {
@@ -146,7 +76,74 @@ public class ItemServiceImpl implements ItemService {
             return true;
         } else {
             throw new ValidationException(String.format(
-                    "Пользователь (id = %s) не брал вещь (id = %s) в аренду", userId, itemId));
+                    "User (id = %s) did not rent item (id = %s)", userId, itemId));
+        }
+    }
+
+    @Transactional
+    @Override
+    public Item saveItem(ItemDto itemDto, long userId) {
+        validateUser(userId);
+        if (itemDto.getAvailable() == null) {
+            throw new ValidationException("The status of the item has not been transferred");
+        }
+        Item item = ItemMapper.toItem(itemDto, userId);
+        return repository.save(item);
+    }
+
+    @Transactional
+    @Override
+    public Optional<Item> updateItem(long itemId, ItemDto itemDto, long userId) {
+        validateUser(userId);
+        Optional<Item> itemOld = validateUserItem(itemId, userId);
+        Item item = ItemMapper.toItem(itemDto, itemOld.get());
+        repository.save(item);
+        return Optional.of(item);
+    }
+
+    @Transactional
+    @Override
+    public boolean deleteItem(long id, long userId) {
+        validateUser(userId);
+        Optional<Item> item = repository.findById(id);
+        if (item.isPresent()) {
+            repository.deleteById(id);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Optional<ItemFullDto> getItem(long id, long userId) {
+        Optional<Item> item = repository.findById(id);
+        if (item.isPresent()) {
+            return Optional.of(ItemMapper.toItemFullDto(item.get(),
+                    bookingRepository.findLastBooking(id, userId, LocalDateTime.now()),
+                    bookingRepository.findNextBooking(id, userId, LocalDateTime.now()),
+                    commentRepository.findAllByItemIdOrderByCreatedDesc(id)
+                            .stream()
+                            .map(comment -> CommentMapper.toCommentDto(comment, validateUser(comment.getAuthorId()).getName()))
+                            .collect(Collectors.toList())));
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public Collection<Item> searchItems(String text) {
+        return text == null || text.isBlank() ? new ArrayList<>() : repository.search(text);
+    }
+
+    @Transactional
+    @Override
+    public Optional<CommentDto> addItemComment(long itemId, long userId, CommentDto commentDto) {
+        User user = validateUser(userId);
+        if (validateBookingItem(itemId, userId)) {
+            Comment comment = commentRepository.save(CommentMapper.toComment(commentDto, itemId, userId));
+            return Optional.of(CommentMapper.toCommentDto(comment, user.getName()));
+        } else {
+            return Optional.empty();
         }
     }
 }
