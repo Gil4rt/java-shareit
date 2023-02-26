@@ -131,7 +131,7 @@ class ItemControllerTest {
     @Test
     void updateItemIsOk() throws Exception {
         when(service.updateItem(anyLong(), any(), anyLong()))
-                .thenReturn(Optional.of(item));
+                .thenReturn(Optional.of(itemDto));
 
         mvc.perform(patch("/items/{id}", 1)
                         .content(mapper.writeValueAsString(itemDto))
