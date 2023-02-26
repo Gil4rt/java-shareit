@@ -67,13 +67,12 @@ public class ItemServiceImpl implements ItemService {
 
     @Transactional
     @Override
-    public Optional<ItemDto> updateItem(long itemId, ItemDto itemDto, long userId) {
-
+    public Optional<Item> updateItem(long itemId, ItemDto itemDto, long userId) {
         validateUser(userId);
         Optional<Item> itemOld = validateUserItem(itemId, userId);
         Item item = itemMapper.toItem(itemDto, itemOld.get());
         repository.save(item);
-        return Optional.of(itemMapper.toItemDto(item));
+        return Optional.of(item);
     }
 
     @Transactional

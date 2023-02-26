@@ -32,9 +32,9 @@ public class ItemController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<ItemDto> updateItem(@PathVariable long id,
-                                              @RequestBody ItemDto itemDto,
-                                              @RequestHeader(X_SHARER_USER_ID) long userId) {
+    public ResponseEntity<Item> updateItem(@PathVariable long id,
+                                           @RequestBody ItemDto itemDto,
+                                           @RequestHeader(X_SHARER_USER_ID) long userId) {
         return itemService.updateItem(id, itemDto, userId).map(updatedItem -> new ResponseEntity<>(updatedItem, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
