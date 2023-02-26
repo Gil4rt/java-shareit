@@ -27,7 +27,7 @@ public class ItemController {
 
     @PostMapping
     public ResponseEntity<Item> createItem(@RequestBody ItemDto itemDto,
-                                              @RequestHeader(X_SHARER_USER_ID) long userId) {
+                                           @RequestHeader(X_SHARER_USER_ID) long userId) {
         return new ResponseEntity<>(itemService.saveItem(itemDto, userId), HttpStatus.CREATED);
     }
 
