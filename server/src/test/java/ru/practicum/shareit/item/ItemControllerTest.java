@@ -126,7 +126,26 @@ class ItemControllerTest {
                 .andExpect(jsonPath(DESCRIPTION, is(item.getDescription())))
                 .andExpect(jsonPath(AVAILABLE, is(item.getAvailable())))
                 .andExpect(jsonPath(REQUEST_ID, is(item.getRequestId()), Long.class));
-    
+    }
+
+    @Test
+    void updateItemIsOk() throws Exception {
+        when(service.updateItem(anyLong(), any(), anyLong()))
+                .thenReturn(Optional.of(item));
+
+        mvc.perform(patch("/items/{id}", 1)
+                        .content(mapper.writeValueAsString(itemDto))
+                        .header(X_SHARER_USER_ID, VALUE_HEADER_ONE)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath(ID, is(item.getId()), Long.class))
+                .andExpect(jsonPath(NAME, is(item.getName())))
+                .andExpect(jsonPath(DESCRIPTION, is(item.getDescription())))
+                .andExpect(jsonPath(AVAILABLE, is(item.getAvailable())))
+                .andExpect(jsonPath("$.requestId", is(item.getRequestId()), Long.class));
+    }
 
     @Test
     void findItemByIdIsOk() throws Exception {
