@@ -133,7 +133,7 @@ class ItemControllerTest {
         when(service.updateItem(anyLong(), any(), anyLong()))
                 .thenReturn(Optional.of(itemDto));
 
-        mvc.perform(patch("/items/{id}", 1)
+        mvc.perform(patch("/items/{id}", 1 )
                         .content(mapper.writeValueAsString(itemDto))
                         .header(X_SHARER_USER_ID, VALUE_HEADER_ONE)
                         .characterEncoding(StandardCharsets.UTF_8)
