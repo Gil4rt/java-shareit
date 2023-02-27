@@ -21,27 +21,27 @@ public class ItemRequestController {
 
     @PostMapping
     public ResponseEntity<ItemRequest> createItemRequest(@Valid @RequestBody ItemRequestDto itemRequestDto,
-                                                         @RequestHeader(X_SHARER_USER_ID) long userId) {
+                                                         @RequestHeader(X_SHARER_USER_ID) Long userId) {
         return new ResponseEntity<>(service.saveItemRequest(itemRequestDto, userId), HttpStatus.OK);
     }
 
     @GetMapping
-    public Collection<ItemRequestFullDto> findUserItemRequests(@RequestHeader(X_SHARER_USER_ID) long userId,
-                                                               @RequestParam(defaultValue = "0") int from,
-                                                               @RequestParam(defaultValue = "20") int size) {
+    public Collection<ItemRequestFullDto> findUserItemRequests(@RequestHeader(X_SHARER_USER_ID) Long userId,
+                                                               @RequestParam(defaultValue = "0") Integer from,
+                                                               @RequestParam(defaultValue = "20") Integer size) {
         return service.findUserItemRequests(userId, from, size);
     }
 
     @GetMapping("/all")
-    public Collection<ItemRequestFullDto> findAllItemRequests(@RequestHeader(X_SHARER_USER_ID) long userId,
-                                                              @RequestParam(defaultValue = "0") int from,
-                                                              @RequestParam(defaultValue = "20") int size) {
+    public Collection<ItemRequestFullDto> findAllItemRequests(@RequestHeader(X_SHARER_USER_ID) Long userId,
+                                                              @RequestParam(defaultValue = "0") Integer from,
+                                                              @RequestParam(defaultValue = "20") Integer size) {
         return service.findAllItemRequests(userId, from, size);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ItemRequestFullDto> findItemById(@PathVariable long id,
-                                                           @RequestHeader(X_SHARER_USER_ID) long userId) {
+    public ResponseEntity<ItemRequestFullDto> findItemById(@PathVariable Long id,
+                                                           @RequestHeader(X_SHARER_USER_ID) Long userId) {
         return service.getItemRequest(id, userId).map(itemRequest -> new ResponseEntity<>(itemRequest, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }

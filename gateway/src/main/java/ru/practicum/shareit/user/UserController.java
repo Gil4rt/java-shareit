@@ -26,17 +26,17 @@ public class UserController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Object> updateUser(@PathVariable long id, @RequestBody UserRequestDto user) {
+    public ResponseEntity<Object> updateUser(@PathVariable Long id, @RequestBody UserRequestDto user) {
         return userClient.updateUser(id, user);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> findUserById(@PathVariable long id) {
+    public ResponseEntity<Object> findUserById(@PathVariable Long id) {
         return userClient.getUser(id);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteUserById(@PathVariable long id) {
+    public ResponseEntity<Object> deleteUserById(@PathVariable Long id) {
         return userClient.deleteUser(id);
     }
 }

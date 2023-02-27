@@ -26,7 +26,7 @@ public class BookingController {
 
     @GetMapping
     public ResponseEntity<Object> getBookings(
-            @RequestHeader(X_SHARER_USER_ID) long userId,
+            @RequestHeader(X_SHARER_USER_ID) Long userId,
             @RequestParam(name = "state", defaultValue = "all") String stateParam,
             @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
             @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
@@ -38,7 +38,7 @@ public class BookingController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> bookItem(@RequestHeader(X_SHARER_USER_ID) long userId,
+    public ResponseEntity<Object> bookItem(@RequestHeader(X_SHARER_USER_ID) Long userId,
                                            @RequestBody @Valid BookItemRequestDto requestDto) {
         log.info("Creating booking {}, userId={}", requestDto, userId);
         validateBooking(requestDto);
@@ -46,7 +46,7 @@ public class BookingController {
     }
 
     @GetMapping("/{bookingId}")
-    public ResponseEntity<Object> getBooking(@RequestHeader(X_SHARER_USER_ID) long userId,
+    public ResponseEntity<Object> getBooking(@RequestHeader(X_SHARER_USER_ID) Long userId,
                                              @PathVariable Long bookingId) {
         log.info("Get booking {}, userId={}", bookingId, userId);
         return bookingClient.getBooking(userId, bookingId);
@@ -54,14 +54,14 @@ public class BookingController {
 
     @PatchMapping("/{bookingId}")
     public ResponseEntity<Object> updateBooking(@PathVariable Long bookingId,
-                                                @RequestHeader(X_SHARER_USER_ID) long userId,
+                                                @RequestHeader(X_SHARER_USER_ID) Long userId,
                                                 @RequestParam Boolean approved) {
         return bookingClient.updateBooking(userId, bookingId, approved);
     }
 
     @GetMapping("/owner")
     public ResponseEntity<Object> findOwnerBookings(
-            @RequestHeader(X_SHARER_USER_ID) long userId,
+            @RequestHeader(X_SHARER_USER_ID) Long userId,
             @RequestParam(name = "state", defaultValue = "all") String stateParam,
             @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
             @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {

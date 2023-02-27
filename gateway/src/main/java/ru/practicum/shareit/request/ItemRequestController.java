@@ -17,29 +17,29 @@ public class ItemRequestController {
 
     @PostMapping
     public ResponseEntity<Object> createItemRequest(@Valid @RequestBody ItemRequestDto itemRequestDto,
-                                                    @RequestHeader(X_SHARER_USER_ID) long userId) {
+                                                    @RequestHeader(X_SHARER_USER_ID) Long userId) {
         return itemRequestClient.createItemRequest(userId, itemRequestDto);
     }
 
     @GetMapping
-    public ResponseEntity<Object> findUserItemRequests(@RequestHeader(X_SHARER_USER_ID) long userId,
-                                                       @RequestParam(defaultValue = "0") int from,
-                                                       @RequestParam(defaultValue = "20") int size) {
+    public ResponseEntity<Object> findUserItemRequests(@RequestHeader(X_SHARER_USER_ID) Long userId,
+                                                       @RequestParam(defaultValue = "0") Integer from,
+                                                       @RequestParam(defaultValue = "20") Integer size) {
         validatePage(from, size);
         return itemRequestClient.getItemRequests(userId, from, size);
     }
 
     @GetMapping("/all")
-    public ResponseEntity<Object> findAllItemRequests(@RequestHeader(X_SHARER_USER_ID) long userId,
-                                                      @RequestParam(defaultValue = "0") int from,
-                                                      @RequestParam(defaultValue = "20") int size) {
+    public ResponseEntity<Object> findAllItemRequests(@RequestHeader(X_SHARER_USER_ID) Long userId,
+                                                      @RequestParam(defaultValue = "0") Integer from,
+                                                      @RequestParam(defaultValue = "20") Integer size) {
         validatePage(from, size);
         return itemRequestClient.getAllItemRequests(userId, from, size);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> findItemById(@PathVariable long id,
-                                               @RequestHeader(X_SHARER_USER_ID) long userId) {
+    public ResponseEntity<Object> findItemById(@PathVariable Long id,
+                                               @RequestHeader(X_SHARER_USER_ID) Long userId) {
         return itemRequestClient.getItemRequest(userId, id);
     }
 

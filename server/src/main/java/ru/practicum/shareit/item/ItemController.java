@@ -21,34 +21,34 @@ public class ItemController {
     private final ItemService itemService;
 
     @GetMapping
-    public Collection<ItemFullDto> findItemItems(@RequestHeader(X_SHARER_USER_ID) long userId) {
+    public Collection<ItemFullDto> findItemItems(@RequestHeader(X_SHARER_USER_ID) Long userId) {
         return itemService.findUserItems(userId);
     }
 
     @PostMapping
     public ResponseEntity<Item> createItem(@RequestBody ItemDto itemDto,
-                                           @RequestHeader(X_SHARER_USER_ID) long userId) {
+                                           @RequestHeader(X_SHARER_USER_ID) Long userId) {
         return new ResponseEntity<>(itemService.saveItem(itemDto, userId), HttpStatus.CREATED);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Item> updateItem(@PathVariable long id,
+    public ResponseEntity<Item> updateItem(@PathVariable Long id,
                                            @RequestBody ItemDto itemDto,
-                                           @RequestHeader(X_SHARER_USER_ID) long userId) {
+                                           @RequestHeader(X_SHARER_USER_ID) Long userId) {
         return itemService.updateItem(id, itemDto, userId).map(updatedItem -> new ResponseEntity<>(updatedItem, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ItemFullDto> findItemById(@PathVariable long id,
-                                                    @RequestHeader(X_SHARER_USER_ID) long userId) {
+    public ResponseEntity<ItemFullDto> findItemById(@PathVariable Long id,
+                                                    @RequestHeader(X_SHARER_USER_ID) Long userId) {
         return itemService.getItem(id, userId).map(item -> new ResponseEntity<>(item, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ItemDto> deleteItemById(@PathVariable long id,
-                                                  @RequestHeader(X_SHARER_USER_ID) long userId) {
+    public ResponseEntity<ItemDto> deleteItemById(@PathVariable Long id,
+                                                  @RequestHeader(X_SHARER_USER_ID) Long userId) {
         return itemService.deleteItem(id, userId) ? new ResponseEntity<>(HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
@@ -59,9 +59,9 @@ public class ItemController {
     }
 
     @PostMapping("/{id}/comment")
-    public ResponseEntity<CommentDto> addItemComment(@PathVariable long id,
+    public ResponseEntity<CommentDto> addItemComment(@PathVariable Long id,
                                                      @Valid @RequestBody CommentDto commentDto,
-                                                     @RequestHeader(X_SHARER_USER_ID) long userId) {
+                                                     @RequestHeader(X_SHARER_USER_ID) Long userId) {
         return itemService.addItemComment(id, userId, commentDto).map(comment -> new ResponseEntity<>(comment, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }

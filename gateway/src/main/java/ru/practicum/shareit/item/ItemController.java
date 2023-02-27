@@ -16,45 +16,45 @@ public class ItemController {
     private final ItemClient itemClient;
 
     @GetMapping
-    public ResponseEntity<Object> findItemItems(@RequestHeader(X_SHARER_USER_ID) long userId) {
+    public ResponseEntity<Object> findItemItems(@RequestHeader(X_SHARER_USER_ID) Long userId) {
         return itemClient.getItems(userId);
     }
 
     @PostMapping
     public ResponseEntity<Object> createItem(@Valid @RequestBody ItemRequestDto itemDto,
-                                             @RequestHeader(X_SHARER_USER_ID) long userId) {
+                                             @RequestHeader(X_SHARER_USER_ID) Long userId) {
         return itemClient.createItem(userId, itemDto);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Object> updateItem(@PathVariable long id,
+    public ResponseEntity<Object> updateItem(@PathVariable Long id,
                                              @RequestBody ItemRequestDto itemDto,
-                                             @RequestHeader(X_SHARER_USER_ID) long userId) {
+                                             @RequestHeader(X_SHARER_USER_ID) Long userId) {
         return itemClient.updateItem(userId, id, itemDto);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> findItemById(@PathVariable long id,
-                                               @RequestHeader(X_SHARER_USER_ID) long userId) {
+    public ResponseEntity<Object> findItemById(@PathVariable Long id,
+                                               @RequestHeader(X_SHARER_USER_ID) Long userId) {
         return itemClient.getItem(userId, id);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteItemById(@PathVariable long id,
-                                                 @RequestHeader(X_SHARER_USER_ID) long userId) {
+    public ResponseEntity<Object> deleteItemById(@PathVariable Long id,
+                                                 @RequestHeader(X_SHARER_USER_ID) Long userId) {
         return itemClient.deleteItem(userId, id);
     }
 
     @GetMapping("/search")
     public ResponseEntity<Object> searchItems(@RequestParam(required = false) String text,
-                                              @RequestHeader(X_SHARER_USER_ID) long userId) {
+                                              @RequestHeader(X_SHARER_USER_ID) Long userId) {
         return itemClient.searchItems(userId, text);
     }
 
     @PostMapping("/{id}/comment")
-    public ResponseEntity<Object> addItemComment(@PathVariable long id,
+    public ResponseEntity<Object> addItemComment(@PathVariable Long id,
                                                  @Valid @RequestBody CommentRequestDto commentDto,
-                                                 @RequestHeader(X_SHARER_USER_ID) long userId) {
+                                                 @RequestHeader(X_SHARER_USER_ID) Long userId) {
         return itemClient.addItemComment(userId, id, commentDto);
     }
 }
