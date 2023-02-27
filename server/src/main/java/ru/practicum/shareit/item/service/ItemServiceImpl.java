@@ -1,6 +1,8 @@
 package ru.practicum.shareit.item.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.model.Booking;
@@ -82,51 +84,53 @@ public class ItemServiceImpl implements ItemService {
 
     @Transactional
     @Override
-    public Item saveItem(ItemDto itemDto, long userId) {
+    public ResponseEntity<ItemDto> saveItem(ItemDto itemDto, long userId) {
         validateUser(userId);
         if (itemDto.getAvailable() == null) {
             throw new ValidationException("The status of the item has not been transferred");
         }
         Item item = ItemMapper.toItem(itemDto, userId);
-        return repository.save(item);
+        Item savedItem = repository.save(item);
+        return ResponseEntity.ok(ItemMapper.toItemDto(savedItem));
     }
 
     @Transactional
     @Override
-    public Optional<Item> updateItem(long itemId, ItemDto itemDto, long userId) {
+    public ResponseEntity<Item> updateItem(long itemId, ItemDto itemDto, long userId) {
         validateUser(userId);
         Optional<Item> itemOld = validateUserItem(itemId, userId);
         Item item = ItemMapper.toItem(itemDto, itemOld.get());
-        repository.save(item);
-        return Optional.of(item);
+        Item updatedItem = repository.save(item);
+        return new ResponseEntity<>(updatedItem, HttpStatus.OK);
     }
 
     @Transactional
     @Override
-    public boolean deleteItem(long id, long userId) {
+    public ResponseEntity<ItemDto> deleteItem(long id, long userId) {
         validateUser(userId);
         Optional<Item> item = repository.findById(id);
         if (item.isPresent()) {
             repository.deleteById(id);
-            return true;
+            return ResponseEntity.ok(ItemMapper.toItemDto(item.get()));
         } else {
-            return false;
+            return ResponseEntity.notFound().build();
         }
     }
 
     @Override
-    public Optional<ItemFullDto> getItem(long id, long userId) {
+    public ResponseEntity<ItemFullDto> getItem(long id, long userId) {
         Optional<Item> item = repository.findById(id);
         if (item.isPresent()) {
-            return Optional.of(ItemMapper.toItemFullDto(item.get(),
+            ItemFullDto itemFullDto = ItemMapper.toItemFullDto(item.get(),
                     bookingRepository.findLastBooking(id, userId, LocalDateTime.now()),
                     bookingRepository.findNextBooking(id, userId, LocalDateTime.now()),
                     commentRepository.findAllByItemIdOrderByCreatedDesc(id)
                             .stream()
                             .map(comment -> CommentMapper.toCommentDto(comment, validateUser(comment.getAuthorId()).getName()))
-                            .collect(Collectors.toList())));
+                            .collect(Collectors.toList()));
+            return ResponseEntity.ok(itemFullDto);
         } else {
-            return Optional.empty();
+            return ResponseEntity.notFound().build();
         }
     }
 
@@ -137,13 +141,14 @@ public class ItemServiceImpl implements ItemService {
 
     @Transactional
     @Override
-    public Optional<CommentDto> addItemComment(long itemId, long userId, CommentDto commentDto) {
+    public ResponseEntity<CommentDto> addItemComment(long itemId, long userId, CommentDto commentDto) {
         User user = validateUser(userId);
         if (validateBookingItem(itemId, userId)) {
             Comment comment = commentRepository.save(CommentMapper.toComment(commentDto, itemId, userId));
-            return Optional.of(CommentMapper.toCommentDto(comment, user.getName()));
+            CommentDto commentDtoResult = CommentMapper.toCommentDto(comment, user.getName());
+            return ResponseEntity.ok(commentDtoResult);
         } else {
-            return Optional.empty();
+            return ResponseEntity.notFound().build();
         }
     }
 }

@@ -26,31 +26,28 @@ public class ItemController {
     }
 
     @PostMapping
-    public ResponseEntity<Item> createItem(@RequestBody ItemDto itemDto,
+    public ResponseEntity<ItemDto> createItem(@RequestBody ItemDto itemDto,
                                            @RequestHeader(X_SHARER_USER_ID) Long userId) {
-        return new ResponseEntity<>(itemService.saveItem(itemDto, userId), HttpStatus.CREATED);
+        return itemService.saveItem(itemDto, userId);
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<Item> updateItem(@PathVariable Long id,
                                            @RequestBody ItemDto itemDto,
                                            @RequestHeader(X_SHARER_USER_ID) Long userId) {
-        return itemService.updateItem(id, itemDto, userId).map(updatedItem -> new ResponseEntity<>(updatedItem, HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        return itemService.updateItem(id, itemDto, userId);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ItemFullDto> findItemById(@PathVariable Long id,
                                                     @RequestHeader(X_SHARER_USER_ID) Long userId) {
-        return itemService.getItem(id, userId).map(item -> new ResponseEntity<>(item, HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        return itemService.getItem(id, userId);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ItemDto> deleteItemById(@PathVariable Long id,
                                                   @RequestHeader(X_SHARER_USER_ID) Long userId) {
-        return itemService.deleteItem(id, userId) ? new ResponseEntity<>(HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return itemService.deleteItem(id, userId);
     }
 
     @GetMapping("/search")
@@ -62,7 +59,6 @@ public class ItemController {
     public ResponseEntity<CommentDto> addItemComment(@PathVariable Long id,
                                                      @Valid @RequestBody CommentDto commentDto,
                                                      @RequestHeader(X_SHARER_USER_ID) Long userId) {
-        return itemService.addItemComment(id, userId, commentDto).map(comment -> new ResponseEntity<>(comment, HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        return itemService.addItemComment(id, userId, commentDto);
     }
 }
