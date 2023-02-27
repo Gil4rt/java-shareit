@@ -1,8 +1,6 @@
 package ru.practicum.shareit.item.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.model.Booking;
@@ -84,53 +82,51 @@ public class ItemServiceImpl implements ItemService {
 
     @Transactional
     @Override
-    public ResponseEntity<ItemDto> saveItem(ItemDto itemDto, long userId) {
+    public Item saveItem(ItemDto itemDto, long userId) {
         validateUser(userId);
         if (itemDto.getAvailable() == null) {
             throw new ValidationException("The status of the item has not been transferred");
         }
         Item item = ItemMapper.toItem(itemDto, userId);
-        Item savedItem = repository.save(item);
-        return ResponseEntity.ok(ItemMapper.toItemDto(savedItem));
+        return repository.save(item);
     }
 
     @Transactional
     @Override
-    public ResponseEntity<Item> updateItem(long itemId, ItemDto itemDto, long userId) {
+    public Optional<Item> updateItem(long itemId, ItemDto itemDto, long userId) {
         validateUser(userId);
         Optional<Item> itemOld = validateUserItem(itemId, userId);
         Item item = ItemMapper.toItem(itemDto, itemOld.get());
-        Item updatedItem = repository.save(item);
-        return new ResponseEntity<>(updatedItem, HttpStatus.OK);
+        repository.save(item);
+        return Optional.of(item);
     }
 
     @Transactional
     @Override
-    public ResponseEntity<ItemDto> deleteItem(long id, long userId) {
+    public boolean deleteItem(long id, long userId) {
         validateUser(userId);
         Optional<Item> item = repository.findById(id);
         if (item.isPresent()) {
             repository.deleteById(id);
-            return ResponseEntity.ok(ItemMapper.toItemDto(item.get()));
+            return true;
         } else {
-            return ResponseEntity.notFound().build();
+            return false;
         }
     }
 
     @Override
-    public ResponseEntity<ItemFullDto> getItem(long id, long userId) {
+    public Optional<ItemFullDto> getItem(long id, long userId) {
         Optional<Item> item = repository.findById(id);
         if (item.isPresent()) {
-            ItemFullDto itemFullDto = ItemMapper.toItemFullDto(item.get(),
+            return Optional.of(ItemMapper.toItemFullDto(item.get(),
                     bookingRepository.findLastBooking(id, userId, LocalDateTime.now()),
                     bookingRepository.findNextBooking(id, userId, LocalDateTime.now()),
                     commentRepository.findAllByItemIdOrderByCreatedDesc(id)
                             .stream()
                             .map(comment -> CommentMapper.toCommentDto(comment, validateUser(comment.getAuthorId()).getName()))
-                            .collect(Collectors.toList()));
-            return ResponseEntity.ok(itemFullDto);
+                            .collect(Collectors.toList())));
         } else {
-            return ResponseEntity.notFound().build();
+            return Optional.empty();
         }
     }
 
@@ -141,14 +137,13 @@ public class ItemServiceImpl implements ItemService {
 
     @Transactional
     @Override
-    public ResponseEntity<CommentDto> addItemComment(long itemId, long userId, CommentDto commentDto) {
+    public Optional<CommentDto> addItemComment(long itemId, long userId, CommentDto commentDto) {
         User user = validateUser(userId);
         if (validateBookingItem(itemId, userId)) {
             Comment comment = commentRepository.save(CommentMapper.toComment(commentDto, itemId, userId));
-            CommentDto commentDtoResult = CommentMapper.toCommentDto(comment, user.getName());
-            return ResponseEntity.ok(commentDtoResult);
+            return Optional.of(CommentMapper.toCommentDto(comment, user.getName()));
         } else {
-            return ResponseEntity.notFound().build();
+            return Optional.empty();
         }
     }
 }
