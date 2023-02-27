@@ -82,23 +82,23 @@ public class ItemServiceImpl implements ItemService {
 
     @Transactional
     @Override
-    public Item saveItem(ItemDto itemDto, long userId) {
+    public ItemDto saveItem(ItemDto itemDto, long userId) {
         validateUser(userId);
         if (itemDto.getAvailable() == null) {
             throw new ValidationException("The status of the item has not been transferred");
         }
         Item item = ItemMapper.toItem(itemDto, userId);
-        return repository.save(item);
+        return ItemMapper.toItemDto(repository.save(item));
     }
 
     @Transactional
     @Override
-    public Optional<Item> updateItem(long itemId, ItemDto itemDto, long userId) {
+    public Optional<ItemDto> updateItem(long itemId, ItemDto itemDto, long userId) {
         validateUser(userId);
         Optional<Item> itemOld = validateUserItem(itemId, userId);
         Item item = ItemMapper.toItem(itemDto, itemOld.get());
         repository.save(item);
-        return Optional.of(item);
+        return Optional.of(ItemMapper.toItemDto(item));
     }
 
     @Transactional
@@ -131,8 +131,9 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Collection<Item> searchItems(String text) {
-        return text == null || text.isBlank() ? new ArrayList<>() : repository.search(text);
+    public Collection<ItemDto> searchItems(String text) {
+        Collection<Item> items = text == null || text.isBlank() ? new ArrayList<>() : repository.search(text);
+        return items.stream().map(item -> ItemMapper.toItemDto(item)).collect(Collectors.toList());
     }
 
     @Transactional

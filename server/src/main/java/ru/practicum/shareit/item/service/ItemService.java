@@ -11,15 +11,15 @@ import java.util.Optional;
 public interface ItemService {
     Collection<ItemFullDto> findUserItems(long userId);
 
-    Item saveItem(ItemDto itemDto, long userId);
+    ItemDto saveItem(ItemDto itemDto, long userId);
 
-    Optional<Item> updateItem(long itemId, ItemDto itemDto, long userId);
+    Optional<ItemDto> updateItem(long itemId, ItemDto itemDto, long userId);
 
     boolean deleteItem(long id, long userId);
 
     Optional<ItemFullDto> getItem(long id, long userId);
 
-    Collection<Item> searchItems(String text);
+    Collection<ItemDto> searchItems(String text);
 
     Optional<CommentDto> addItemComment(long itemId, long userId, CommentDto commentDto);
 

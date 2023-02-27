@@ -341,7 +341,7 @@ class ItemServiceImplTest {
                 .thenReturn(sourceItems);
 
         // when
-        Collection<Item> targetItems =
+        Collection<ItemDto> targetItems =
                 itemService.searchItems("поход");
 
         // then

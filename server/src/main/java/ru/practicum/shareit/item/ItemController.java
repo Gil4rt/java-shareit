@@ -26,13 +26,13 @@ public class ItemController {
     }
 
     @PostMapping
-    public ResponseEntity<Item> createItem(@RequestBody ItemDto itemDto,
+    public ResponseEntity<ItemDto> createItem(@RequestBody ItemDto itemDto,
                                            @RequestHeader(X_SHARER_USER_ID) Long userId) {
         return new ResponseEntity<>(itemService.saveItem(itemDto, userId), HttpStatus.CREATED);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Item> updateItem(@PathVariable Long id,
+    public ResponseEntity<ItemDto> updateItem(@PathVariable Long id,
                                            @RequestBody ItemDto itemDto,
                                            @RequestHeader(X_SHARER_USER_ID) Long userId) {
         return itemService.updateItem(id, itemDto, userId).map(updatedItem -> new ResponseEntity<>(updatedItem, HttpStatus.OK))
@@ -54,7 +54,7 @@ public class ItemController {
     }
 
     @GetMapping("/search")
-    public Collection<Item> searchItems(@RequestParam(required = false) String text) {
+    public Collection<ItemDto> searchItems(@RequestParam(required = false) String text) {
         return itemService.searchItems(text);
     }
 

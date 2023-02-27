@@ -112,7 +112,7 @@ class ItemControllerTest {
     @Test
     void createItem() throws Exception {
         when(service.saveItem(any(), anyLong()))
-                .thenReturn(item);
+                .thenReturn(itemDto);
 
         mvc.perform(post("/items")
                         .content(mapper.writeValueAsString(itemDto))
@@ -131,7 +131,7 @@ class ItemControllerTest {
     @Test
     void updateItemIsOk() throws Exception {
         when(service.updateItem(anyLong(), any(), anyLong()))
-                .thenReturn(Optional.of(item));
+                .thenReturn(Optional.of(itemDto));
 
         mvc.perform(patch("/items/{id}", 1)
                         .content(mapper.writeValueAsString(itemDto))
@@ -219,7 +219,7 @@ class ItemControllerTest {
     @Test
     void searchItems() throws Exception {
         when(service.searchItems(anyString()))
-                .thenReturn(List.of(item));
+                .thenReturn(List.of(ItemMapper.toItemDto(item)));
 
         mvc.perform(get("/items/search")
                         .header(X_SHARER_USER_ID, VALUE_HEADER_ONE)
