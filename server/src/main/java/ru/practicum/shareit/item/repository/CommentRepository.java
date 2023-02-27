@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.item.model.Comment;
 
 import java.util.Collection;
+
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
     Collection<Comment> findAllByItemIdOrderByCreatedDesc(long itemId);

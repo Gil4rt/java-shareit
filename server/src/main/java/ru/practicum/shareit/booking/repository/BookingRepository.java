@@ -11,6 +11,7 @@ import ru.practicum.shareit.booking.model.BookingStatus;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Optional;
+
 @Repository
 public interface BookingRepository extends JpaRepository<Booking, Long> {
     Page<Booking> findAllByBookerId(long bookerId, Pageable pageable);
@@ -40,21 +41,21 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             " order by b.start desc")
     Page<Booking> findAllByOwnerId(long ownerId, String state, LocalDateTime localDateTime, Pageable pageable);
 
-    @Query(value = "select b.* from bookings b " +
-            " where b.item_id = :itemId " +
-            "   and b.booker_id <> :userId " +
-            "   and b.start_date < :now " +
-            " order by b.start_date asc limit 1",
-            nativeQuery = true)
+    @Query("SELECT b FROM Booking b " +
+            "WHERE b.itemId = :itemId " +
+            "AND b.bookerId <> :userId " +
+            "AND b.start < :now " +
+            "ORDER BY b.start ASC")
     Optional<Booking> findLastBooking(long itemId, long userId, LocalDateTime now);
 
-    @Query(value = "select b.* from bookings b " +
-            " where b.item_id = :itemId " +
-            "   and b.booker_id <> :userId " +
-            "   and b.start_date > :now " +
-            " order by b.start_date desc limit 1",
-            nativeQuery = true)
+
+    @Query("SELECT b FROM Booking b " +
+            "WHERE b.itemId = :itemId " +
+            "AND b.bookerId <> :userId " +
+            "AND b.start > :now " +
+            "ORDER BY b.start DESC")
     Optional<Booking> findNextBooking(long itemId, long userId, LocalDateTime now);
+
 
     Optional<Booking> findByItemIdAndBookerIdAndStatusAndEndBefore(
             long itemId, long userId, BookingStatus status, LocalDateTime now);
